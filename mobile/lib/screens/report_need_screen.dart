@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'confirmation_screen.dart';
 
 const Color rahatNavy = Color(0xFF153E75);
 const Color rahatTeal = Color(0xFF168C83);
@@ -26,17 +27,21 @@ class _ReportNeedScreenState extends State<ReportNeedScreen> {
     super.dispose();
   }
 
-  void _submitRequest() {
-    if (!_formKey.currentState!.validate()) return;
+void _submitRequest() {
+  if (!_formKey.currentState!.validate()) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Form validated. Backend submission is not connected yet.',
-        ),
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ConfirmationScreen(
+        needType: _needType,
+        urgency: _urgency,
+        location: _locationController.text.trim(),
+        description: _descriptionController.text.trim(),
       ),
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
