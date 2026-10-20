@@ -1,4 +1,9 @@
+
 import 'package:flutter/material.dart';
+
+import '../models/relief_request.dart';
+import '../services/request_storage.dart';
+import 'track_request_screen.dart';
 
 const Color confirmationNavy = Color(0xFF153E75);
 const Color confirmationTeal = Color(0xFF168C83);
@@ -17,6 +22,29 @@ class ConfirmationScreen extends StatelessWidget {
     required this.location,
     required this.description,
   });
+
+  Future<void> _saveRequest(BuildContext context) async {
+    final request = ReliefRequest(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      needType: needType,
+      urgency: urgency,
+      location: location,
+      description: description,
+      status: 'Pending',
+      createdAt: DateTime.now().toIso8601String(),
+    );
+
+    await RequestStorage.saveRequest(request);
+
+    if (!context.mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const TrackRequestScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +89,28 @@ class ConfirmationScreen extends StatelessWidget {
                 'Check these details before connecting the app to '
                 'the relief coordination backend.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: confirmationText, height: 1.5),
+                style: TextStyle(
+                  color: confirmationText,
+                  height: 1.5,
+                ),
               ),
               const SizedBox(height: 28),
-              _DetailCard(label: 'Assistance needed', value: needType),
-              _DetailCard(label: 'Urgency', value: urgency),
-              _DetailCard(label: 'Location', value: location),
-              _DetailCard(label: 'Description', value: description),
+              _DetailCard(
+                label: 'Assistance needed',
+                value: needType,
+              ),
+              _DetailCard(
+                label: 'Urgency',
+                value: urgency,
+              ),
+              _DetailCard(
+                label: 'Location',
+                value: location,
+              ),
+              _DetailCard(
+                label: 'Description',
+                value: description,
+              ),
               const SizedBox(height: 20),
               Container(
                 width: double.infinity,
@@ -75,12 +118,14 @@ class ConfirmationScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFF3E0),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFE6A23C)),
+                  border: Border.all(
+                    color: const Color(0xFFE6A23C),
+                  ),
                 ),
                 child: const Text(
-                  'Not submitted yet. No relief team has been notified. '
-                  'This is a local preview until backend submission '
-                  'is implemented.',
+                  'This request will be saved locally on this device. '
+                  'No relief team will be notified until backend '
+                  'submission is implemented.',
                   style: TextStyle(
                     color: confirmationText,
                     height: 1.5,
@@ -99,13 +144,15 @@ class ConfirmationScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => _saveRequest(context),
                   style: FilledButton.styleFrom(
                     backgroundColor: confirmationNavy,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 15,
+                    ),
                   ),
-                  child: const Text('Back to Form'),
+                  child: const Text('Save Request'),
                 ),
               ),
             ],
@@ -133,7 +180,9 @@ class _DetailCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: Color(0xFFE2E8F0)),
+        side: const BorderSide(
+          color: Color(0xFFE2E8F0),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'screens/report_need_screen.dart';
+import 'screens/track_request_screen.dart';
 
 void main() {
   runApp(const RahatApp());
@@ -54,6 +55,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void openRequests() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const TrackRequestScreen(),
+      ),
+    );
+  }
+
+  void openReportForm() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ReportNeedScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () => showMessage('Notifications coming soon.'),
+            onPressed: () =>
+                showMessage('Notifications coming soon.'),
             icon: const Icon(Icons.notifications_none),
             tooltip: 'Notifications',
           ),
@@ -167,45 +187,38 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 14),
 
-              // Main actions
+              // Request Help
               ActionCard(
                 icon: Icons.volunteer_activism,
                 title: 'Request Help',
-                subtitle: 'Report food, water, medicine, or other needs',
+                subtitle:
+                    'Report food, water, medicine, or other needs',
                 color: navy,
-                onTap: () {
-                 Navigator.push(
-                  context,
-                 MaterialPageRoute(
-                    builder: (context) => const ReportNeedScreen(),
-                 ),
-               );
-                },
+                onTap: openReportForm,
               ),
               const SizedBox(height: 12),
+
+              // Track Request
               ActionCard(
                 icon: Icons.track_changes,
                 title: 'Track Request',
-                subtitle: 'Check the status of an existing request',
+                subtitle:
+                    'Check the status of an existing request',
                 color: teal,
-                onTap: () => showMessage(
-                  'Request tracking is coming next.',
-                ),
+                onTap: openRequests,
               ),
               const SizedBox(height: 12),
+
+              // Relief Map
               ActionCard(
                 icon: Icons.map_outlined,
                 title: 'Relief Map',
-                subtitle: 'Explore relief centers and reported roadblocks',
+                subtitle:
+                    'Explore relief centers and reported roadblocks',
                 color: const Color(0xFF52677F),
                 onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => const ReportNeedScreen(),
-    ),
-  );
-},
+                  showMessage('The relief map is coming next.');
+                },
               ),
               const SizedBox(height: 24),
 
@@ -224,7 +237,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  border: Border.all(
+                    color: const Color(0xFFE2E8F0),
+                  ),
                 ),
                 child: const Row(
                   children: [
@@ -252,6 +267,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+
+      // Bottom navigation
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
         onDestinationSelected: (index) {
@@ -259,12 +276,10 @@ class _HomeScreenState extends State<HomeScreen> {
             selectedIndex = index;
           });
 
-          if (index != 0) {
-            showMessage(
-              index == 1
-                  ? 'Your requests will appear here.'
-                  : 'The relief map is coming next.',
-            );
+          if (index == 1) {
+            openRequests();
+          } else if (index == 2) {
+            showMessage('The relief map is coming next.');
           }
         },
         destinations: const [
@@ -289,6 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+// Reusable action card
 class ActionCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -313,7 +329,9 @@ class ActionCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Color(0xFFE2E8F0)),
+        side: const BorderSide(
+          color: Color(0xFFE2E8F0),
+        ),
       ),
       child: InkWell(
         onTap: onTap,
@@ -328,7 +346,11 @@ class ActionCard extends StatelessWidget {
                   color: color.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: color, size: 28),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: 28,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
