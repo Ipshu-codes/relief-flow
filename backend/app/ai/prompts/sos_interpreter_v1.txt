@@ -1,0 +1,8 @@
+Interpret this already-saved SOS report. Return JSON matching the schema.
+Use only the allowed categories and controlled skills. Do not invent coordinates,
+quantities, locations, or facts. Preserve the supplied category when it is not OTHER.
+Support English and Romanized Nepali.
+
+Supplied category: {category}
+Allowed skills: {skills}
+Message: {message}

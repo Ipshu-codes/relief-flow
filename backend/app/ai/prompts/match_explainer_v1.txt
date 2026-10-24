@@ -1,0 +1,5 @@
+Write one concise, evidence-based reason for each supplied volunteer candidate.
+Return exactly one explanation for every supplied volunteer_id and no other IDs.
+Do not rank, reorder, remove, or add candidates. Do not change any score or fact.
+
+Candidates: {candidates}

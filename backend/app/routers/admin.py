@@ -9,9 +9,9 @@ from sqlalchemy.orm import Session
 from ..db import get_db
 from ..ledger import mark_verified
 from ..models import Contribution
-from ..security import require_admin
+from ..security import require_role
 
-router = APIRouter(prefix='/api/admin', tags=['admin'], dependencies=[Depends(require_admin)])
+router = APIRouter(prefix='/api/admin', tags=['admin'], dependencies=[Depends(require_role('admin'))])
 
 OPEN = ['ready', 'needs_fix']
 
