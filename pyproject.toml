@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rahat-coordination"
+version = "1.0.0"
+description = "Local-AI assisted disaster relief coordination"
+requires-python = ">=3.11"
+
+[tool.setuptools]
+packages = ["app", "app.routers", "app.services", "app.geo", "app.pipelines", "ai", "protocol"]
+package-dir = {app = "backend/app", ai = "ai", protocol = "protocol"}
+
+[tool.setuptools.package-data]
+ai = ["prompts/*.txt"]
+protocol = ["categories.json", "vectors.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = [".", "backend"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"

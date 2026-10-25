@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rahat-protocol"
+version = "0.1.0"
+description = "Rahat Mesh Protocol (RMP v1): packet codec, signing, fragmentation"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+dependencies = ["cbor2>=5.6", "cryptography>=42"]
+
+[tool.setuptools.packages.find]
+where = [".."]
+include = ["protocol*"]
+
+[tool.setuptools.package-dir]
+"" = ".."

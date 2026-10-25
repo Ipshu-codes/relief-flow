@@ -1,0 +1,6 @@
+Parse this pasted road-status update into the complete JSON schema. Return only information stated in the text.
+Do not invent coordinates, road names, locations, dates, or statuses. Coordinates are supplied only by a coordinator during review.
+Use status blocked for closed roads, partial for partly open or restricted-lane roads, one_way for one-way traffic, and night_restricted for night-only restrictions.
+If no road status update is present, return updates as []. Use null for unknown fields and list them in missing_fields.
+Text:
+{text}

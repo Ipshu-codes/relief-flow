@@ -1,0 +1,7 @@
+Decide whether these two reports likely describe the same event.
+Use only the supplied text, timestamps, senders, and similarity score. Do not invent locations or facts.
+Return JSON matching the schema. A low-confidence result is appropriate when evidence is incomplete.
+
+Report A: {first}
+Report B: {second}
+Text similarity: {similarity}

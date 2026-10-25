@@ -1,0 +1,6 @@
+Map the need text to zero or more skills from the supplied controlled list.
+Return only JSON matching the supplied schema. Use exact skill names only.
+Do not invent skills, equipment, quantities, locations, or facts.
+
+Allowed skills: {skills}
+Need text: {description}

@@ -1,0 +1,5 @@
+Explain this deterministic response bottleneck using only the supplied evidence.
+Do not add facts, change severity, or claim that a suggested action has happened.
+Return one concise explanation and one suggested coordinator action as JSON.
+
+Evidence: {evidence}

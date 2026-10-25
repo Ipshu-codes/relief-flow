@@ -1,0 +1,159 @@
+{
+  "started_at": "2026-10-25T12:37:06.272170+00:00",
+  "model": "qwen2.5:3b",
+  "ollama_url": "http://127.0.0.1:11434",
+  "installed_models": [
+    {
+      "name": "qwen2.5:3b",
+      "model": "qwen2.5:3b",
+      "modified_at": "2026-10-24T21:35:16.9716836+05:45",
+      "size": 1929912432,
+      "digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "3.1B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 32768,
+        "embedding_length": 2048,
+        "runner": "ggml"
+      },
+      "capabilities": [
+        "completion",
+        "tools"
+      ]
+    },
+    {
+      "name": "qwen2.5:7b",
+      "model": "qwen2.5:7b",
+      "modified_at": "2026-10-23T21:28:30.8197812+05:45",
+      "size": 4683087332,
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 32768,
+        "embedding_length": 3584,
+        "runner": "ggml"
+      },
+      "capabilities": [
+        "completion",
+        "tools"
+      ]
+    }
+  ],
+  "prompt_version": "report_parser_v2",
+  "corpus_sha256": "d23b5789219af66c276f13fbb4df2b19b1d922577a5dff3afee13e8fea7463fb",
+  "prompt_sha256": "2c00a929ce64679fa646385cb16505d7d48535f7844d917c0940fe6ede16c5aa",
+  "timeout_seconds_per_attempt": 90.0,
+  "max_model_cases": 1,
+  "budget_seconds": 100.0,
+  "skills": [
+    "doctor",
+    "nurse",
+    "first_aid",
+    "search_and_rescue",
+    "boat_operator",
+    "driver",
+    "electrician",
+    "plumber",
+    "logistics",
+    "cooking"
+  ],
+  "locations": [
+    "Melamchi",
+    "Sindhupalchowk",
+    "Chautara",
+    "Ward 3"
+  ],
+  "database": "sqlite:///:memory:",
+  "rows": [
+    {
+      "id": "en-water",
+      "mode": "model",
+      "source": "error",
+      "status": "failed",
+      "error": "TimeoutError: ",
+      "latency_ms": 100033.384,
+      "wrapper_logs": []
+    }
+  ],
+  "elapsed_seconds": 100.924,
+  "summary": {
+    "model": {
+      "attempted": 1,
+      "completed": 0,
+      "failures": 1,
+      "source_counts": {
+        "error": 1
+      },
+      "category_exact_correct": 0,
+      "category_exact_accuracy": null,
+      "micro_precision": null,
+      "micro_recall": null,
+      "micro_f1": null,
+      "latency_ms_total": 100033.384,
+      "latency_ms_mean": 100033.384,
+      "latency_ms_p50": 100033.384,
+      "latency_ms_max": 100033.384,
+      "wrapper_failed_attempts": 0,
+      "urgency": {
+        "correct": 0,
+        "scored": 0,
+        "accuracy": null
+      },
+      "families_affected": {
+        "correct": 0,
+        "scored": 0,
+        "accuracy": null
+      },
+      "quantity": {
+        "correct": 0,
+        "scored": 0,
+        "accuracy": null
+      }
+    }
+  },
+  "model_ai_only": {
+    "attempted": 0,
+    "completed": 0,
+    "failures": 0,
+    "source_counts": {},
+    "category_exact_correct": 0,
+    "category_exact_accuracy": null,
+    "micro_precision": null,
+    "micro_recall": null,
+    "micro_f1": null,
+    "latency_ms_total": 0,
+    "latency_ms_mean": null,
+    "latency_ms_p50": null,
+    "latency_ms_max": null,
+    "wrapper_failed_attempts": 0,
+    "urgency": {
+      "correct": 0,
+      "scored": 0,
+      "accuracy": null
+    },
+    "families_affected": {
+      "correct": 0,
+      "scored": 0,
+      "accuracy": null
+    },
+    "quantity": {
+      "correct": 0,
+      "scored": 0,
+      "accuracy": null
+    }
+  },
+  "finished_at": "2026-10-25T12:38:47.196543+00:00"
+}

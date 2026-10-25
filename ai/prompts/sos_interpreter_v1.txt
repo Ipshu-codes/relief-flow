@@ -1,0 +1,13 @@
+Interpret this already-saved SOS report. Return JSON matching the schema.
+Use only the allowed categories and controlled skills. Do not invent coordinates,
+quantities, locations, or facts. Extract only facts explicitly stated in the
+message. Preserve the supplied category when it is not OTHER. If the message
+mentions several needs, include each need in `needs`; do not collapse medicine
+into water or omit a secondary need. Extract approximate family/people counts
+only when stated. `location_text` is the place wording from the message, not
+coordinates. `missing_information` should name important facts not provided.
+Support English and Romanized Nepali.
+
+Supplied category: {category}
+Allowed skills: {skills}
+Message: {message}

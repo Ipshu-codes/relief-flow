@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "note": "Canonical SOS categories shared by mobile, gateway, and evals. Add new categories here first (docs/FEATURE_DEVELOPMENT.md).",
+  "categories": [
+    { "id": "medical", "en": "Medical", "ne": "चिकित्सा", "icon": "medical" },
+    { "id": "trapped", "en": "Trapped", "ne": "फसेको", "icon": "trapped" },
+    { "id": "fire", "en": "Fire", "ne": "आगलागी", "icon": "fire" },
+    { "id": "flood", "en": "Flood", "ne": "बाढी", "icon": "flood" },
+    { "id": "food_water", "en": "Food & water", "ne": "खाना र पानी", "icon": "food" },
+    { "id": "shelter", "en": "Shelter", "ne": "आश्रय", "icon": "shelter" },
+    { "id": "missing", "en": "Missing person", "ne": "बेपत्ता", "icon": "missing" },
+    { "id": "road_blocked", "en": "Road blocked", "ne": "बाटो बन्द", "icon": "road" },
+    { "id": "other", "en": "Other", "ne": "अन्य", "icon": "other" }
+  ]
+}

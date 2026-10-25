@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "note": "RMP v1 shared test vectors",
+  "vectors": [
+    {
+      "name": "sos_trapped_boudha",
+      "note": "Signed SOS; TTL outside signature",
+      "wire_hex": "0101040c1f09119000d209906adcf8da6ee5ef1357dd19f0a91620d56d395ca49e9757243001d3d889dd1d14779646130038a4616367747261707065646174706368696c6472656e2074726170706564636c6174fb403bb79a6b50b0f2636c6f6efb405554bc6a7ef9db1bd03ad4a50ffd2fcabfa9ffd847efddbb670fd0f178b366ffde6aa2aa9a476d7fc295a52bf4d83c88bc64f53adc3041e9322390c7c499137800681930e3a505",
+      "sender_pub_hex": "6ee5ef1357dd19f0a91620d56d395ca49e9757243001d3d889dd1d1477964613",
+      "payload_json": {
+        "c": "trapped",
+        "t": "children trapped",
+        "lat": 27.7172,
+        "lon": 85.324
+      },
+      "expect": {
+        "type": "SOS",
+        "ttl": 12,
+        "verify": true
+      }
+    },
+    {
+      "name": "sos_flood_relayed",
+      "note": "After one relay hop, TTL decremented but signature remains valid",
+      "wire_hex": "0101040b6975d7974035fce36adcf8da7ce95d1388b7f230fe77539495dc54da1c8a976f016c4e714b1e948b7205586e0032a4616365666c6f6f6461746c776174657220726973696e67636c6174fb403bb1a36e2eb1c4636c6f6efb40555692a3055326699df9794e3072eb68fdac33a1ed25f54915fbff8f6af681afaa4bc61ffe75463ceb6ba348abbb46cce76ff18c07e4088ba5fd172dcde6eb98a2fa64ebbe3501",
+      "sender_pub_hex": "7ce95d1388b7f230fe77539495dc54da1c8a976f016c4e714b1e948b7205586e",
+      "payload_json": {
+        "c": "flood",
+        "t": "water rising",
+        "lat": 27.6939,
+        "lon": 85.3527
+      },
+      "expect": {
+        "type": "SOS",
+        "ttl": 11,
+        "verify": true
+      }
+    },
+    {
+      "name": "sos_tamper_rejected",
+      "note": "Tampered payload must be rejected by verify/decode",
+      "wire_hex_tampered": "0101040c21e25d87ececf4b46adcf8dab235901744ccc8ed7580d2ee989c442463d0b9f2a865e2a89769f682e2f7430a00425b61636c726f61645f626c6f636b65646174756c616e64736c69646520626c6f636b7320726f6164636c6174fb403bbc28f5c28f5c636c6f6efb40555428f5c28f5c8f7aedb659900a2fbeb06d9172a0b62cb36fb389f5ae1db479ba8b06f30cb3da5e860ed94e6da269e58b832165cb53123c0865bba5bd2432f0ae0eaee6644405",
+      "sender_pub_hex": "b235901744ccc8ed7580d2ee989c442463d0b9f2a865e2a89769f682e2f7430a",
+      "payload_json": {
+        "c": "road_blocked",
+        "t": "landslide blocks road",
+        "lat": 27.735,
+        "lon": 85.315
+      },
+      "expect": {
+        "verify": false,
+        "decode_raises": "CodecError"
+      }
+    }
+  ]
+}

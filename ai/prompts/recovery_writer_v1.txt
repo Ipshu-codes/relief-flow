@@ -1,0 +1,5 @@
+Write a short recovery summary using only the supplied aggregate statistics.
+Keep estimated baseline, reported need, verified damage, and confirmed assistance distinct.
+Do not infer missing values or claim causation. Return JSON with a confidence label.
+
+Statistics: {statistics}

@@ -1,0 +1,6 @@
+Choose exactly one stock option from the supplied, code-validated options.
+The quantity and route are fixed by code. Do not change, calculate, or return quantities, stock, coordinates, or routes.
+Choose the provider that best fits the need using the supplied available quantity, proposed quantity, and estimated travel duration.
+Return the selected stock_id, a concise evidence-based rationale, and confidence.
+Options:
+{options}

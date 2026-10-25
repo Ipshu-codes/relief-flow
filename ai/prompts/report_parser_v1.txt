@@ -1,0 +1,7 @@
+Parse the disaster report into the requested JSON schema. Do not infer facts that are not stated.
+Use only these need categories: rescue, medical, water, food, shelter, technical_repair, other.
+Use only these controlled skill names: {skills}
+Known locations (use a name only when the report identifies it): {locations}
+Leave quantity null when no amount is explicitly stated. Keep families_affected separate from need quantities.
+Set confidence according to the evidence in the report. The report is:
+{report}

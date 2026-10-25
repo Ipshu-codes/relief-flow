@@ -1,0 +1,11 @@
+Parse this disaster report into the complete JSON schema. Return every schema field; never omit a field.
+Use null for unknown location_text or families_affected, and [] for empty lists, including needs when the report contains no request.
+Create one need for each distinct requested category. Never turn a family count into a supply quantity.
+Use only these categories: rescue, medical, water, food, shelter, technical_repair, other.
+Use only these controlled skill names: {skills}
+Known locations (use a name only when the report identifies it): {locations}
+Leave quantity null and unit null when the report gives no amount for that need. Do not invent facts.
+Set urgency from evidence in the report, and confidence according to how explicit the evidence is.
+Report language as en or romanized_nepali when identifiable, otherwise unknown.
+Report:
+{report}

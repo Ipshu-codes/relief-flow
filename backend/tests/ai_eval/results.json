@@ -1,0 +1,3522 @@
+{
+  "started_at": "2026-10-25T12:30:15.283563+00:00",
+  "model": "qwen2.5:3b",
+  "ollama_url": "http://127.0.0.1:11434",
+  "installed_models": [
+    {
+      "name": "qwen2.5:3b",
+      "model": "qwen2.5:3b",
+      "modified_at": "2026-10-24T21:35:16.9716836+05:45",
+      "size": 1929912432,
+      "digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "3.1B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 32768,
+        "embedding_length": 2048,
+        "runner": "ggml"
+      },
+      "capabilities": [
+        "completion",
+        "tools"
+      ]
+    },
+    {
+      "name": "qwen2.5:7b",
+      "model": "qwen2.5:7b",
+      "modified_at": "2026-10-23T21:28:30.8197812+05:45",
+      "size": 4683087332,
+      "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "details": {
+        "parent_model": "",
+        "format": "gguf",
+        "family": "qwen2",
+        "families": [
+          "qwen2"
+        ],
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M",
+        "context_length": 32768,
+        "embedding_length": 3584,
+        "runner": "ggml"
+      },
+      "capabilities": [
+        "completion",
+        "tools"
+      ]
+    }
+  ],
+  "prompt_version": "report_parser_v2",
+  "corpus_sha256": "d23b5789219af66c276f13fbb4df2b19b1d922577a5dff3afee13e8fea7463fb",
+  "prompt_sha256": "2c00a929ce64679fa646385cb16505d7d48535f7844d917c0940fe6ede16c5aa",
+  "timeout_seconds_per_attempt": 35.0,
+  "max_model_cases": 5,
+  "budget_seconds": 480.0,
+  "skills": [
+    "doctor",
+    "nurse",
+    "first_aid",
+    "search_and_rescue",
+    "boat_operator",
+    "driver",
+    "electrician",
+    "plumber",
+    "logistics",
+    "cooking"
+  ],
+  "locations": [
+    "Melamchi",
+    "Sindhupalchowk",
+    "Chautara",
+    "Ward 3"
+  ],
+  "database": "sqlite:///:memory:",
+  "rows": [
+    {
+      "id": "en-water",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Ward 3",
+        "families_affected": 12,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": 200.0,
+            "unit": "litres",
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 2.465,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-food",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Sindhupalchowk",
+        "families_affected": 8,
+        "needs": [
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 0.32,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-rescue",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Melamchi",
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "rescue",
+            "item": "rescue assistance",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 5,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 1,
+        "false_positive": 1,
+        "false_negative": 0,
+        "urgency_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 0.288,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-medical",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "nurse"
+            ]
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 0.232,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-no-request",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 2,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.306,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-multi",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Melamchi",
+        "families_affected": 20,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "shelter",
+            "item": "shelter",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 3,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.281,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-rescue",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "rescue",
+            "item": "rescue assistance",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 5,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "urgency_correct": true,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.233,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-repair",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "technical_repair",
+            "item": "technical repair",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "electrician"
+            ]
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.46,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-fragment",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 0.256,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-shelter",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": 5,
+        "needs": [
+          {
+            "category": "shelter",
+            "item": "shelter",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 0.278,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-medical-count",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "doctor"
+            ]
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          false
+        ]
+      },
+      "latency_ms": 0.292,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-water",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Melamchi",
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": 40.0,
+            "unit": "litres",
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 0.277,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-food-count",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": 25.0,
+            "unit": "kg",
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 0.236,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-shelter-count",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "shelter",
+            "item": "shelter",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          false
+        ]
+      },
+      "latency_ms": 0.31,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-two-needs",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": 10,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.318,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-greeting",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.274,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-thanks",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.204,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-negation",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "shelter",
+            "item": "shelter",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 1,
+        "false_positive": 2,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.254,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-injury",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.271,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-repair",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "technical_repair",
+            "item": "technical repair",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 1,
+        "false_positive": 1,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.268,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-offer",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": 100.0,
+            "unit": "bottles",
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 1,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.314,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-vague",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 1,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.215,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-fragment",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 0.222,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-resolved",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "rescue",
+            "item": "rescue assistance",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 5,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 1,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.24,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-family-not-quantity",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Chautara",
+        "families_affected": 30,
+        "needs": [
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 0.255,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-separated-quantity",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Melamchi",
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          false,
+          false
+        ]
+      },
+      "latency_ms": 0.324,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-typos",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 1,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.21,
+      "wrapper_logs": []
+    },
+    {
+      "id": "ne-rescue-medical",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "doctor"
+            ]
+          },
+          {
+            "category": "rescue",
+            "item": "rescue assistance",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "doctor"
+            ]
+          }
+        ],
+        "urgency": 5,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "urgency_correct": true,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.438,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-transport",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 1,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.234,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-question",
+      "mode": "baseline",
+      "source": "keyword",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 1,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 0.262,
+      "wrapper_logs": []
+    },
+    {
+      "id": "en-water",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Ward 3",
+        "families_affected": 12,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": 200.0,
+            "unit": "litres",
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 578.506,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 12,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": 12, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Ward 3\", \"missing_fields\": [], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": 200.0, \"required_skills\": [], \"unit\": \"litres\"}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-food",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Sindhupalchowk",
+        "families_affected": 8,
+        "needs": [
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 537.057,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": 8, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Sindhupalchowk\", \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-rescue",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Melamchi",
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "rescue",
+            "item": "rescue assistance",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 5,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 1,
+        "false_positive": 1,
+        "false_negative": 0,
+        "urgency_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 535.955,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 4,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Melamchi\", \"missing_fields\": [], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"rescue\", \"item\": \"rescue assistance\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 5, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-medical",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "nurse"
+            ]
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 548.477,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"medical\", \"item\": \"medicine\", \"quantity\": null, \"required_skills\": [\"nurse\"], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-no-request",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 2,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 542.06,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-multi",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Melamchi",
+        "families_affected": 20,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "shelter",
+            "item": "shelter",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 3,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": []
+      },
+      "latency_ms": 555.423,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": 20, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Melamchi\", \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"shelter\", \"item\": \"shelter\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-rescue",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "rescue",
+            "item": "rescue assistance",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 5,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "urgency_correct": true,
+        "quantity_checks": []
+      },
+      "latency_ms": 546.891,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"rescue\", \"item\": \"rescue assistance\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 5, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-repair",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "technical_repair",
+            "item": "technical repair",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "electrician"
+            ]
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 564.415,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"technical_repair\", \"item\": \"technical repair\", \"quantity\": null, \"required_skills\": [\"electrician\"], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-fragment",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 615.174,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-shelter",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": 5,
+        "needs": [
+          {
+            "category": "shelter",
+            "item": "shelter",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 828.904,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": 5, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"shelter\", \"item\": \"shelter\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-medical-count",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "doctor"
+            ]
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          false
+        ]
+      },
+      "latency_ms": 816.298,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 5,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"medical\", \"item\": \"medicine\", \"quantity\": null, \"required_skills\": [\"doctor\"], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-water",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Melamchi",
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": 40.0,
+            "unit": "litres",
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 839.959,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Melamchi\", \"missing_fields\": [], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": 40.0, \"required_skills\": [], \"unit\": \"litres\"}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-food-count",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": 25.0,
+            "unit": "kg",
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 751.514,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [], \"needs\": [{\"category\": \"food\", \"item\": \"food\", \"quantity\": 25.0, \"required_skills\": [], \"unit\": \"kg\"}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-shelter-count",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "shelter",
+            "item": "shelter",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          false
+        ]
+      },
+      "latency_ms": 712.243,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"shelter\", \"item\": \"shelter\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-two-needs",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": 10,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": []
+      },
+      "latency_ms": 553.975,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": 10, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-greeting",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 567.237,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [], \"needs\": [], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-thanks",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 560.704,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 5,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 4,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [], \"needs\": [], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-negation",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "shelter",
+            "item": "shelter",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 1,
+        "false_positive": 2,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 532.344,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"shelter\", \"item\": \"shelter\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-injury",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 536.569,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"medical\", \"item\": \"medicine\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-repair",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "technical_repair",
+            "item": "technical repair",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 1,
+        "false_positive": 1,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 526.259,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"technical_repair\", \"item\": \"technical repair\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-offer",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": 100.0,
+            "unit": "bottles",
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 1,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 517.517,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": 100.0, \"required_skills\": [], \"unit\": \"bottles\"}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-vague",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 1,
+        "quantity_checks": []
+      },
+      "latency_ms": 508.915,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [], \"needs\": [], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-fragment",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 509.802,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"medical\", \"item\": \"medicine\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-resolved",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "rescue",
+            "item": "rescue assistance",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 5,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 1,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 527.632,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"rescue\", \"item\": \"rescue assistance\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 5, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-family-not-quantity",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Chautara",
+        "families_affected": 30,
+        "needs": [
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 539.144,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": 30, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Chautara\", \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-separated-quantity",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Melamchi",
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          false,
+          false
+        ]
+      },
+      "latency_ms": 508.622,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Melamchi\", \"missing_fields\": [], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-typos",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 1,
+        "quantity_checks": []
+      },
+      "latency_ms": 540.647,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [], \"needs\": [], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-rescue-medical",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "doctor"
+            ]
+          },
+          {
+            "category": "rescue",
+            "item": "rescue assistance",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "doctor"
+            ]
+          }
+        ],
+        "urgency": 5,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "urgency_correct": true,
+        "quantity_checks": []
+      },
+      "latency_ms": 505.674,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"medical\", \"item\": \"medicine\", \"quantity\": null, \"required_skills\": [\"doctor\"], \"unit\": null}, {\"category\": \"rescue\", \"item\": \"rescue assistance\", \"quantity\": null, \"required_skills\": [\"doctor\"], \"unit\": null}], \"urgency\": 5, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-transport",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 1,
+        "quantity_checks": []
+      },
+      "latency_ms": 514.019,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 3,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [], \"needs\": [], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-question",
+      "mode": "offline",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 1,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 544.615,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 4,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 2,
+          "validation_result": "ConnectionError: Intentional local evaluation outage; no network request",
+          "fallback_used": true,
+          "output": "ConnectionError: Intentional local evaluation outage; no network request"
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-water",
+      "mode": "model",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Ward 3",
+        "families_affected": 12,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": 200.0,
+            "unit": "litres",
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 71671.523,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35445,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35482,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": 12, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Ward 3\", \"missing_fields\": [], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": 200.0, \"required_skills\": [], \"unit\": \"litres\"}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-food",
+      "mode": "model",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Sindhupalchowk",
+        "families_affected": 8,
+        "needs": [
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "families_affected_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 72299.565,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35434,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35361,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": 8, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Sindhupalchowk\", \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-rescue",
+      "mode": "model",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": "Melamchi",
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "rescue",
+            "item": "rescue assistance",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 5,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 1,
+        "false_positive": 1,
+        "false_negative": 0,
+        "urgency_correct": true,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 72961.724,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35774,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35755,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": \"Melamchi\", \"missing_fields\": [], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"rescue\", \"item\": \"rescue assistance\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 5, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "ne-medical",
+      "mode": "model",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "medical",
+            "item": "medicine",
+            "quantity": null,
+            "unit": null,
+            "required_skills": [
+              "nurse"
+            ]
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": true,
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "quantity_checks": [
+          true
+        ]
+      },
+      "latency_ms": 72124.468,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35278,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35255,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"medical\", \"item\": \"medicine\", \"quantity\": null, \"required_skills\": [\"nurse\"], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    },
+    {
+      "id": "en-no-request",
+      "mode": "model",
+      "source": "fallback",
+      "status": "completed",
+      "parsed": {
+        "location_text": null,
+        "families_affected": null,
+        "needs": [
+          {
+            "category": "water",
+            "item": "drinking water",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          },
+          {
+            "category": "food",
+            "item": "food",
+            "quantity": null,
+            "unit": null,
+            "required_skills": []
+          }
+        ],
+        "urgency": 3,
+        "vulnerable_groups": [],
+        "hazards": [],
+        "missing_fields": [
+          "quantity"
+        ],
+        "follow_up_questions": [],
+        "language": "unknown",
+        "confidence": "low"
+      },
+      "score": {
+        "category_exact": false,
+        "true_positive": 0,
+        "false_positive": 2,
+        "false_negative": 0,
+        "quantity_checks": []
+      },
+      "latency_ms": 72642.278,
+      "wrapper_logs": [
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35656,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 35718,
+          "validation_result": "ReadTimeout: ",
+          "fallback_used": true,
+          "output": "ReadTimeout: "
+        },
+        {
+          "model": "qwen2.5:3b",
+          "latency_ms": 0,
+          "validation_result": "fallback_valid",
+          "fallback_used": true,
+          "output": "{\"confidence\": \"low\", \"families_affected\": null, \"follow_up_questions\": [], \"hazards\": [], \"language\": \"unknown\", \"location_text\": null, \"missing_fields\": [\"quantity\"], \"needs\": [{\"category\": \"water\", \"item\": \"drinking water\", \"quantity\": null, \"required_skills\": [], \"unit\": null}, {\"category\": \"food\", \"item\": \"food\", \"quantity\": null, \"required_skills\": [], \"unit\": null}], \"urgency\": 3, \"vulnerable_groups\": []}"
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 380.663,
+  "summary": {
+    "baseline": {
+      "attempted": 30,
+      "completed": 30,
+      "failures": 0,
+      "source_counts": {
+        "keyword": 30
+      },
+      "category_exact_correct": 20,
+      "category_exact_accuracy": 0.6666666666666666,
+      "micro_precision": 0.7428571428571429,
+      "micro_recall": 0.896551724137931,
+      "micro_f1": 0.8125,
+      "latency_ms_total": 10.537,
+      "latency_ms_mean": 0.351,
+      "latency_ms_p50": 0.273,
+      "latency_ms_max": 2.465,
+      "wrapper_failed_attempts": 0,
+      "urgency": {
+        "correct": 3,
+        "scored": 3,
+        "accuracy": 1.0
+      },
+      "families_affected": {
+        "correct": 6,
+        "scored": 6,
+        "accuracy": 1.0
+      },
+      "quantity": {
+        "correct": 10,
+        "scored": 14,
+        "accuracy": 0.7142857142857143
+      }
+    },
+    "offline": {
+      "attempted": 30,
+      "completed": 30,
+      "failures": 0,
+      "source_counts": {
+        "fallback": 30
+      },
+      "category_exact_correct": 20,
+      "category_exact_accuracy": 0.6666666666666666,
+      "micro_precision": 0.7428571428571429,
+      "micro_recall": 0.896551724137931,
+      "micro_f1": 0.8125,
+      "latency_ms_total": 17466.551,
+      "latency_ms_mean": 582.218,
+      "latency_ms_p50": 543.337,
+      "latency_ms_max": 839.959,
+      "wrapper_failed_attempts": 60,
+      "urgency": {
+        "correct": 3,
+        "scored": 3,
+        "accuracy": 1.0
+      },
+      "families_affected": {
+        "correct": 6,
+        "scored": 6,
+        "accuracy": 1.0
+      },
+      "quantity": {
+        "correct": 10,
+        "scored": 14,
+        "accuracy": 0.7142857142857143
+      }
+    },
+    "model": {
+      "attempted": 5,
+      "completed": 5,
+      "failures": 0,
+      "source_counts": {
+        "fallback": 5
+      },
+      "category_exact_correct": 3,
+      "category_exact_accuracy": 0.6,
+      "micro_precision": 0.5714285714285714,
+      "micro_recall": 1.0,
+      "micro_f1": 0.7272727272727273,
+      "latency_ms_total": 361699.558,
+      "latency_ms_mean": 72339.912,
+      "latency_ms_p50": 72299.565,
+      "latency_ms_max": 72961.724,
+      "wrapper_failed_attempts": 10,
+      "urgency": {
+        "correct": 1,
+        "scored": 1,
+        "accuracy": 1.0
+      },
+      "families_affected": {
+        "correct": 2,
+        "scored": 2,
+        "accuracy": 1.0
+      },
+      "quantity": {
+        "correct": 4,
+        "scored": 4,
+        "accuracy": 1.0
+      }
+    }
+  },
+  "model_ai_only": {
+    "attempted": 0,
+    "completed": 0,
+    "failures": 0,
+    "source_counts": {},
+    "category_exact_correct": 0,
+    "category_exact_accuracy": null,
+    "micro_precision": null,
+    "micro_recall": null,
+    "micro_f1": null,
+    "latency_ms_total": 0,
+    "latency_ms_mean": null,
+    "latency_ms_p50": null,
+    "latency_ms_max": null,
+    "wrapper_failed_attempts": 0,
+    "urgency": {
+      "correct": 0,
+      "scored": 0,
+      "accuracy": null
+    },
+    "families_affected": {
+      "correct": 0,
+      "scored": 0,
+      "accuracy": null
+    },
+    "quantity": {
+      "correct": 0,
+      "scored": 0,
+      "accuracy": null
+    }
+  },
+  "finished_at": "2026-10-25T12:36:35.948293+00:00"
+}

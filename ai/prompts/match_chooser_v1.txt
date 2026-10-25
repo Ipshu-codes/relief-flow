@@ -1,0 +1,6 @@
+Choose exactly one volunteer from the supplied, code-validated candidates.
+Select by fit to the need, considering verified skills, code score, and estimated route duration.
+Return that candidate's volunteer_id, a concise evidence-based rationale, and confidence.
+Do not invent or alter candidates, skills, scores, quantities, routes, or eligibility.
+Candidates:
+{candidates}
