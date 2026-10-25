@@ -113,6 +113,16 @@ async def health(db: Session = Depends(get_db)):
     }
 
 
+@app.get('/health')
+async def health_alias(db: Session = Depends(get_db)):
+    """Compatibility alias for external probes that poll ``/health``.
+
+    The canonical route is ``/api/health``; this alias returns the same payload
+    so uptime checkers and browser tabs pointed at ``/health`` do not log 404s.
+    """
+    return await health(db)
+
+
 async def check_ollama():
     try:
         async with httpx.AsyncClient(timeout=OLLAMA_TIMEOUT_SECONDS) as client:

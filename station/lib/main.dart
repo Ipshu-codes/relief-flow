@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rahat_mobile/app_state.dart';
-import 'package:rahat_mobile/screens/coordination.dart';
+import 'service_station_screen.dart';
 
 void main() {
   runApp(const ServiceStationApp());
@@ -13,7 +13,7 @@ class ServiceStationApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rahat Service Station',
+      title: 'Rahat Service Station · Station E',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF0D1114),
@@ -26,7 +26,7 @@ class ServiceStationApp extends StatelessWidget {
       ),
       home: ChangeNotifierProvider(
         create: (_) => AppState(),
-        child: const CoordinationScreen(stationMode: true),
+        child: const ServiceStationScreen(),
       ),
     );
   }

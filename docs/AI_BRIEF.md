@@ -1,5 +1,11 @@
 # Rahat AI Layer: Hackathon Build Brief
 
+> This is the original design and requirement brief, not a completion report.
+> Proposed paths and behaviors below may differ from the current build. Use
+> [../AI_USAGE.md](../AI_USAGE.md) for exact implemented functions and
+> [CHECKLIST.md](CHECKLIST.md) for remaining gaps. Items marked VERIFY still
+> require independent checks; this documentation does not certify event rules.
+
 *Give this to your AI coding assistant for all AI work. Researched 24 Oct 2026. Items marked **VERIFY** were found through third-party projects or from memory, not official documentation. Test them with curl before building on them.*
 
 ## 1. What this brief is for

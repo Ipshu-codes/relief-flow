@@ -1669,13 +1669,14 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
                   onPressed: _busy ? null : _login,
                   icon: const Icon(Icons.login),
                   label: Text(_register ? 'Create Account' : 'Sign In')),
-              TextButton(
-                  onPressed: _busy
-                      ? null
-                      : () => setState(() => _register = !_register),
-                  child: Text(_register
-                      ? 'Sign in instead'
-                      : 'Create community account')),
+              if (!widget.stationMode)
+                TextButton(
+                    onPressed: _busy
+                        ? null
+                        : () => setState(() => _register = !_register),
+                    child: Text(_register
+                        ? 'Sign in instead'
+                        : 'Create community account')),
             ],
           )));
 
@@ -1683,6 +1684,7 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
   Widget build(BuildContext context) {
     final incidents = _rows(_workspace['incidents']);
     final pages = <String, Widget>{
+      if (widget.stationMode && _manager) 'SOS Queue': _sosQueueView(),
       if (widget.section != 'volunteer') 'Needs': _needsView(),
       if (widget.section != 'response') ...{
         'Assignments': _assignmentsView(),
@@ -1691,7 +1693,7 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
       },
       if (widget.section != 'volunteer') 'Supplies': _suppliesView(),
       if (_manager && widget.section != 'volunteer') ...{
-        'SOS Queue': _sosQueueView(),
+        if (!widget.stationMode) 'SOS Queue': _sosQueueView(),
         if (!widget.stationMode) 'Nepal Map': MapScreen(api: _api),
         'Mesh Lab': _meshLabView(),
         'Intelligence': _intelligenceView(),
@@ -1756,8 +1758,9 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
                       children: [
                         Text('${_user!['full_name']}'),
                         _badge(_label(_user!['role'])),
-                        _button('My profile', Icons.contact_emergency_outlined,
-                            _editProfile),
+                        if (!widget.stationMode)
+                          _button('My profile',
+                              Icons.contact_emergency_outlined, _editProfile),
                         if (_notifications.isNotEmpty)
                           _button(
                               'Alerts (${_notifications.length})',

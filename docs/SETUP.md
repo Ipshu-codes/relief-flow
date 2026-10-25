@@ -1,164 +1,160 @@
-# Setup
+# Local Setup
+
+These instructions are for the current Windows build: one FastAPI backend,
+the public Flutter app, and the Flutter Service Station. They do not use the
+legacy gateway, GraphHopper, Node, Docker or old `make` targets.
 
 ## Prerequisites
-| Tool | Version |
+
+| Tool | Requirement |
 |---|---|
-| Python | 3.11+ |
-| Flutter | 3.24+ (Dart 3.5+) |
-| Node | 20+ (dashboard) |
-| Ollama | latest |
-| Java | 17+ (GraphHopper) |
-| Docker | optional |
+| Python | 3.11 or later |
+| Flutter | 3.24 or later, with a compatible Dart SDK |
+| Ollama | Windows installation from https://ollama.com/download/windows |
+| Browser | A current browser for the public app and station |
+| Android tools | Only needed for an Android build or physical-device tests |
 
-## 1. Clone
-```bash
-git clone https://github.com/<org>/rahat && cd rahat
+Download dependencies and the model before attempting an offline demonstration.
+An 8 GB laptop can be memory-constrained; local inference latency must be
+measured, not assumed.
+
+## 1. Install the Backend
+
+Open PowerShell at the repository root. The example path is this workspace;
+use your checkout directory on another machine.
+
+```powershell
+Set-Location 'D:\Rahat final'
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+Set-Location backend
+..\.venv\Scripts\python.exe -m app.setup_local --demo
 ```
 
-## 2. Gateway
-```bash
-cd gateway
-python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
-cp .env.example .env
-alembic upgrade head
-python scripts/gen_station_keys.py     # creates station keypair + enrollment QR
+`app.setup_local` applies migrations and initializes local configuration and
+reference records. `--demo` adds synthetic demonstration data. Do not run demo
+seeding against a real response deployment, and do not delete a database to
+work around a migration error.
+
+The configuration reference is [../backend/.env.example](../backend/.env.example).
+Keep secrets in the local environment, never in the public repository.
+
+## 2. Prepare Ollama
+
+After installing Ollama:
+
+```powershell
+ollama pull qwen2.5:3b
+ollama list
 ```
 
-## 3. Local AI
-```bash
-ollama serve &
-ollama pull qwen2.5:7b-instruct        # Dispatcher (Standard: laptop 16GB)
-ollama pull qwen2.5:1.5b-instruct      # extraction/scoring (Lite: Pi)
-ollama pull nomic-embed-text           # embeddings
-# optional: ollama pull llama3.1:8b  /  ollama pull phi3:mini
-```
-`.env`:
-```
-RAHAT_MODEL=qwen2.5:1.5b-instruct
-RAHAT_AGENT_MODEL=qwen2.5:7b-instruct
-RAHAT_EMBED_MODEL=nomic-embed-text
-RAHAT_LLM_URL=http://127.0.0.1:11434
-AGENT_MODE=hybrid              # llm | hybrid | rules  (Pi: rules or hybrid)
-AGENT_MAX_STEPS=6
-AUTO_DISPATCH=false            # true only for drills/demos
-AUTO_DISPATCH_MIN_PRIORITY=85
-DEMO_MODE=false
-RAHAT_MOCK_LLM=false           # true for dev without a model
+The Windows installation normally runs a local service. Start `ollama serve`
+in a separate terminal only if that service is not running. Do not launch a
+second instance on port `11434`.
+
+The backend reads these settings from its local environment:
+
+```dotenv
+OLLAMA_URL=http://localhost:11434
+OLLAMA_MODEL=qwen2.5:3b
 ```
 
-## 4. Offline geo data (routing)
-Requires **Java 17+** and internet **once**. Everything runs offline afterwards.
+The default model is a configuration choice, not proof of a completed model
+comparison. Do not use a cloud tag for the documented local/offline setup.
+The current code has no embedding model, `AGENT_MODE` or `AUTO_DISPATCH` setting.
 
-```bash
-make fetch-geo           # ~450 MB: Nepal OSM extract + GraphHopper 11.1 jar
-make graphhopper-import  # optional: pre-build the routing graph (several minutes)
-make graphhopper         # serve on http://127.0.0.1:8989
-make graphhopper-status  # verify the router is reachable
+Task timeout settings are defined in
+[../backend/app/config.py](../backend/app/config.py). The wrapper can make two
+attempts, so a request may take longer than one per-attempt timeout. First
+model loading can add delay. See [AI_EVALUATION.md](AI_EVALUATION.md) before
+promising interactive inference on this laptop.
+
+## 3. Start the Backend
+
+From the backend directory:
+
+```powershell
+..\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Point the gateway at it in `.env` (default already matches):
+Keep this terminal open. Check http://127.0.0.1:8000/api/health and open
+http://127.0.0.1:8000/docs for the API explorer. `/health` is not the backend
+health route and returns 404. AI status is at http://127.0.0.1:8000/ai/status.
 
-```bash
-RAHAT_ROUTER_URL=http://127.0.0.1:8989
-```
+## 4. Start the Public App
 
-If the router is unreachable the gateway falls back to straight-line (haversine)
-ETAs, so development and demos never break.
+In another terminal:
 
-To use a smaller region while testing (Monaco is a few hundred KB):
-
-```bash
-make fetch-geo GH_OSM_URL=https://download.geofabrik.de/europe/monaco-latest.osm.pbf
-```
-
-See `infra/graphhopper/README.md` for memory tuning, the config, and how to add
-foot/bike profiles.
-
-### Offline map basemap
-The dashboard and the Flutter app draw Nepal from committed GeoJSON — no tile
-server and no internet at runtime:
-
-```bash
-python scripts/build_map_assets.py             # rebuild from cached downloads
-python scripts/build_map_assets.py --download  # re-download from geoJSON-Nepal (MIT)
-```
-
-Outputs: `dashboard/data/{nepal_states,nepal_hq}.geojson` and the same files in
-`mobile/assets/` (declared in `pubspec.yaml`). Street-level tiles (MBTiles/PMTiles)
-remain a separate step and are not built by `fetch-geo`.
-
-## 5. Run gateway
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-python -m app.mcp_server --http --port 8001   # optional MCP
-```
-
-## 6. Dashboard
-The gateway serves the zero-build dashboard itself (no npm step):
-```bash
-make gateway
-# open http://127.0.0.1:8000/
-```
-The map plots each incident at the coordinates in its SOS packet, and reloads
-from `/api/v1/incidents` every 10 s plus on WebSocket `incident.created`.
-
-## 7. Mobile
-```bash
-cd mobile
+```powershell
+Set-Location 'D:\Rahat final\frontend'
 flutter pub get
-dart run build_runner build
-flutter run             # Android device recommended for BLE
-```
-Android: grant Bluetooth scan/advertise/connect + location permissions. The SOS
-screen requests a fresh GPS fix and shows coordinates + accuracy before sending;
-if no fix is available it falls back to the Kathmandu valley centre and labels
-the report approximate.
-
-### Connecting a real phone
-The app's default `http://127.0.0.1:8000` only works on the station machine.
-On a phone on the same Wi-Fi/hotspot:
-
-```bash
-make gateway-lan      # binds 0.0.0.0:8000
-hostname -I           # station IP, e.g. 192.168.1.42
+flutter run -d web-server --web-hostname 127.0.0.1 --web-port 52394
 ```
 
-Then in the app: **Settings → Command station URL → `http://192.168.1.42:8000`**.
-The Android manifest allows cleartext HTTP for this local-network case (there
-is no TLS on the station); BLE mesh traffic is unaffected.
+Open http://127.0.0.1:52394. The browser build does not prove native BLE relay.
+For Android build instructions, see [ANDROID_BLE.md](ANDROID_BLE.md).
 
-## 8. Demo Mode (no hardware)
-```bash
-make demo        # sets DEMO_MODE=true, starts the gateway + dashboard, opens Mesh Lab
-make eval-agent  # run Dispatcher scenarios
-```
-See [DEMO_MODE.md](DEMO_MODE.md).
+## 5. Start the Service Station
 
-## 9. Load-test simulator (standalone)
-```bash
-cd simulator && python run.py --nodes 50 --loss 0.2 --gateway http://localhost:8000
+In a third terminal:
+
+```powershell
+Set-Location 'D:\Rahat final\station'
+flutter pub get
+flutter run -d web-server --web-hostname 127.0.0.1 --web-port 52396
 ```
 
-## Raspberry Pi 5 profile
-```bash
-sudo apt install bluez python3-venv openjdk-17-jre
-# use infra/pi/setup.sh: sets up the systemd services (gateway, ollama, graphhopper, hotspot)
-```
-Set `AGENT_MODE=rules` or `hybrid`. Run it as a Wi-Fi hotspot (`Rahat-Station`) so dashboards on nearby laptops can connect.
+Open http://127.0.0.1:52396. The station and public app both use the same
+backend on port `8000`; the station is not a second server-side datastore.
 
-## Docker (dev)
-```bash
-docker compose -f infra/docker-compose.yml up
+For local demo data, sign in as `coordinator@demo.rahat.org` or
+`volunteer@demo.rahat.org`, with password `RahatDemo2026!`. These are public
+demonstration credentials, never deployment credentials.
+
+## 6. Run Tests and Evaluation
+
+From the repository root:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest backend\tests -q
+.\.venv\Scripts\python.exe -m pytest backend\tests\ai_eval\test_evaluate.py -q -p no:cacheprovider
+.\.venv\Scripts\python.exe -m backend.tests.ai_eval.evaluate --mode baseline --output backend\tests\ai_eval\baseline_results.json
 ```
+
+To attempt a bounded live comparison with the installed local model:
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.tests.ai_eval.evaluate --mode all --max-cases 30 --timeout 90 --budget-seconds 600 --output backend\tests\ai_eval\full_results.json
+```
+
+This may finish fewer than thirty live cases. Inspect `source` and coverage;
+do not count fallback as model success. Run one live evaluation at a time.
+
+In each Flutter project, run `flutter analyze` and `flutter test`. These check
+client code, not real GPS, radio delivery or model quality.
 
 ## Troubleshooting
-| Symptom | Fix |
-|---|---|
-| LLM slow on Pi | Use a Q4 1.5B model; cut context; `RAHAT_MAX_TOKENS=256`; `AGENT_MODE=rules` |
-| No BLE peers | Check permissions; disable battery optimization; use a USB BLE dongle on the station |
-| Invalid JSON from the model | Confirm the Ollama version supports `format`; check `ai_runs` for fallback |
-| Agent loops / invalid tool calls | Use qwen2.5:7b; lower temperature; check `agent_steps`; set `AGENT_MODE=hybrid` (falls back to the matching engine) |
 
-## Makefile targets
-`setup · gateway · dashboard · mobile-run · demo · test · lint · eval · eval-agent · simulate · fetch-geo`
+| Symptom | What to Check |
+|---|---|
+| `/health` returns 404 | Use `/api/health`; check `/docs` for registered endpoints |
+| Flutter reports `10048` | The port is occupied. Inspect its current owner and use the existing server or choose a free port |
+| `Stop-Process` cannot find the PID | That process exited or the PID was stale. Query the listener again; do not reuse an old number |
+| AI result says `fallback` | Inspect Ollama availability, installed model and `AICallLog`; timeout/rule output is not live AI evidence |
+| SOS exists but has no need | Linking needs usable incident/location context; missing GPS is not replaced with invented coordinates |
+| Weather data unavailable offline | A matching saved snapshot must already exist for those coordinates |
+| A phone cannot reach the backend | `127.0.0.1` means the phone itself. Use a trusted LAN binding and a developer-controlled `BACKEND_BASE_URL` build value |
+
+To inspect occupied ports:
+
+```powershell
+Get-NetTCPConnection -LocalPort 8000,52394,52396 -State Listen -ErrorAction SilentlyContinue | Select-Object LocalAddress, LocalPort, OwningProcess
+```
+
+Use the existing page when it belongs to this project. If a separate instance
+is needed, choose a free port, for example `--web-port 52397`. Stop only a
+process you have identified and intend to stop; do not kill every Dart process.
+
+Before recording, follow [DEMO.md](DEMO.md) and review
+[LIMITATIONS.md](LIMITATIONS.md). No setup command certifies a production
+emergency deployment.

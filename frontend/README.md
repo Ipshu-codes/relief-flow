@@ -1,16 +1,41 @@
-# rahat_mobile
+# Rahat public/mobile frontend
 
-A new Flutter project.
+Flutter application for people requesting help and people offering help.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Structured SOS and one-confirmation Direct SOS
+- Durable offline SOS outbox and receipt-aware retry
+- Written Nepal locations and optional GPS enrichment
+- Nepal emergency calling shortcuts
+- Volunteer and organization registration
+- Community help offers and notifications
+- Status tracking, profiles and emergency contacts
+- Offline map, mesh simulation and native Android BLE relay
 
-A few resources to get you started if this is your first Flutter project:
+The Service Station is intentionally a separate frontend in
+[`../station/`](../station).
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Run
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```powershell
+Set-Location 'D:\Rahat final\frontend'
+flutter pub get
+flutter run -d chrome --web-port 52394
+```
+
+The backend should be running at `http://127.0.0.1:8000`. Users do not enter
+that address; local debug URL resolution handles it automatically.
+
+Android build:
+
+```powershell
+flutter build apk --debug
+```
+
+Tests:
+
+```powershell
+flutter analyze
+flutter test
+```

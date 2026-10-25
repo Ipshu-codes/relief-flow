@@ -1,7 +1,27 @@
 # Architecture
 
+Rahat has one operational database and two clients: the public/mobile app in
+[../frontend/README.md](../frontend/README.md) and the coordinator Service
+Station in [../station/README.md](../station/README.md). AI is a backend
+component, not a separate source of incident truth.
+
+```mermaid
+flowchart LR
+  Mobile[Public Flutter app] --> API[FastAPI]
+  Station[Flutter Service Station] --> API
+  API --> DB[(Shared SQLite database)]
+  API --> Checks[Eligibility, scores, route estimates, receipt math]
+  API --> AI[generate_json: schema, retry, fallback]
+  AI --> Model[Local Ollama]
+  AI --> Output[Validated extraction or candidate selection]
+  Output --> Draft[Code persists unverified needs or draft proposals]
+  Draft --> DB
+  Station --> Review[Human verification and approval]
+  Review --> API
+```
+
 ```text
-Flutter: public help screen + role-aware command workspace
+Flutter: public/mobile app + separate Service Station
   | one server URL; JWT for protected operations
   | durable local SOS outbox; stable client_uuid; status receipt
   v
@@ -92,7 +112,47 @@ if the model or network is unavailable.
 `ai/client.py::generate_json` centralizes schema validation, one retry, per-event-loop
 single-flight inference and local call logging. No closed runtime AI providers.
 Reports, skill mapping, chooser decisions and coordination output have concrete
-consumers; see [AI_USAGE](AI_USAGE.md). Fallbacks are deliberately basic and labelled.
+consumers; see [../AI_USAGE.md](../AI_USAGE.md). Fallbacks are deliberately basic
+and labelled. The configured Ollama endpoint defaults to localhost.
+
+### Report to Assignment
+
+1. `create_report` saves a raw report and calls `parse_report` for categories,
+  urgency, quantities, skills and missing-information questions.
+2. Code resolves an existing incident and location. Only with usable context
+  does it create unverified needs. Questions are stored; there is no automatic
+  two-way follow-up conversation.
+3. `resolve_need_skills` invokes the skill mapper only if the need has no
+  required skills. Code checks verified skills, availability and estimated
+  routes, then calculates a fixed candidate score.
+4. `propose_ai_assignment` sends the top three eligible candidates to the
+  chooser. Its selected ID must belong to that list. Code creates a draft.
+5. A manager approves after feasibility is rechecked. The assigned volunteer
+  accepts, reports progress, and records an outcome. Supply fulfillment still
+  requires confirmed receipts rather than an assignment completion alone.
+
+### Coordination Cycle
+
+`run_coordination_cycle` gathers open needs and builds assignment and allocation
+candidates. Candidate context includes urgency, remaining quantity, verified
+skills, score breakdowns, estimated travel time and stock availability. Code
+limits the input to twenty candidates and the selection to five actions.
+The model selects candidate IDs and supplies rationale/confidence; code checks
+those IDs and creates the drafts. Reusing a batch UUID returns prior proposals.
+
+This is **one structured selection**, not an iterative tool loop. The full
+situation summary, hazards digest and previous outcomes are not included in
+the prompt. There is no general tool registry, confidence-based auto-approval,
+or feedback-driven model update. The periodic scheduler scans for bottlenecks;
+it is not a scheduled AI coordination loop.
+
+### Explanation Versus Action
+
+Exposure scores and candidate rankings are computed by code. AI can recommend
+attention order among supplied locations and explain evidence. Duplicate
+judgments enrich flags without merging reports. Bottleneck explanations and
+recovery narratives are returned to users; their text is not an instruction
+executor. These distinctions are important when presenting the system's AI use.
 
 ## Data/import boundaries
 
@@ -100,3 +160,18 @@ External adapters have timeouts and saved snapshots. Their availability, source
 licensing, completeness and data recency are separate from algorithm correctness.
 Synthetic baselines are never described as a verified government feed.
 Routing is a geometry-based estimate, not navigation on a road network.
+See [DATA_SOURCES.md](DATA_SOURCES.md) for attribution and snapshot requirements.
+
+## Failure and Trust Boundaries
+
+- A saved SOS and its receipt precede background interpretation. A model
+  outage does not undo that receipt; interpretation and notifications may
+  still be delayed or fail separately.
+- Reports use a synchronous parsing path, so slow model attempts can delay
+  the report response. It is not the same save-first contract as SOS intake.
+- Schema and candidate-ID validation constrain output shape and choices,
+  not factual accuracy. Human review is still required.
+- Operational outcomes change need/volunteer status and ledger records. They
+  do not update matching weights, dedupe thresholds or model parameters.
+- Audit entries and AI-call records support inspection. Their presence is
+  not a certification of safety, privacy or production readiness.
