@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const titles = ['Rahat', 'Volunteer', 'Mesh', 'Settings'];
+    const titles = ['Rahat', 'Volunteer', 'Response', 'Mesh', 'Settings'];
     final pageIndex = _selectedIndex;
     return Scaffold(
       appBar: AppBar(
@@ -79,7 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
         CoordinationScreen(
             api: widget.moduleApi,
             embedded: true,
-            section: _selectedIndex == 1 ? 'volunteer' : 'response'),
+            section: 'volunteer'),
+        CoordinationScreen(
+            api: widget.moduleApi,
+            embedded: true,
+            section: 'response'),
         const MeshScreen(embedded: true),
         const SettingsScreen(embedded: true),
       ])),
@@ -91,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(
               icon: Icon(Icons.volunteer_activism_outlined),
               label: 'Volunteer'),
+          NavigationDestination(icon: Icon(Icons.assignment_outlined), label: 'Response'),
           NavigationDestination(icon: Icon(Icons.wifi_outlined), label: 'Mesh'),
           NavigationDestination(
               icon: Icon(Icons.settings_outlined), label: 'Settings'),
