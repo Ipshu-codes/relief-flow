@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(
               icon: Icon(Icons.volunteer_activism_outlined),
               label: 'Volunteer'),
-          NavigationDestination(icon: Icon(Icons.assignment_outlined), label: 'Response'),
+          NavigationDestination(icon: Icon(Icons.assignment_outlined), label: 'Request and Response'),
           NavigationDestination(icon: Icon(Icons.wifi_outlined), label: 'Mesh'),
           NavigationDestination(
               icon: Icon(Icons.settings_outlined), label: 'Settings'),
