@@ -23,11 +23,22 @@ flutter pub get
 flutter run -d web-server --web-hostname 127.0.0.1 --web-port 52396
 ```
 
-Open `http://localhost:52396`. Keep the terminal open. `web-server` mode is
+Open `http://127.0.0.1:52396`. Keep the terminal open. `web-server` mode is
 preferred when Chrome debug attachment times out.
 
-The backend must be running at `http://127.0.0.1:8000`. Sign in using a
-coordinator account. The station does not own a separate database.
+The backend must be running at `http://127.0.0.1:8000`. For the local demo,
+sign in with `admin@demo.rahat.org` and password `Rahat123!`. The credentials
+exist only in a database seeded with demo data. From the repository root, run
+this once against the same database configured for the backend:
+
+```powershell
+Set-Location 'D:\Rahat final\backend'
+..\.venv\Scripts\python.exe -m app.setup_local --demo
+```
+
+This creates or refreshes the local demo account and data. The station and
+public app use the same database. These are demonstration credentials, not
+deployment credentials.
 
 Tests and release web build:
 

@@ -38,7 +38,16 @@ const Set<String> _majorCities = {
 
 class MapScreen extends StatefulWidget {
   final ModuleApi? api;
-  const MapScreen({super.key, this.api});
+  final int? incidentId;
+  final Set<int>? incidentIds;
+  final bool embedded;
+  const MapScreen({
+    super.key,
+    this.api,
+    this.incidentId,
+    this.incidentIds,
+    this.embedded = false,
+  });
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -57,6 +66,19 @@ class _MapScreenState extends State<MapScreen> {
     _load();
   }
 
+  @override
+  void didUpdateWidget(covariant MapScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.incidentId != widget.incidentId ||
+        !_sameIds(oldWidget.incidentIds, widget.incidentIds)) {
+      _load();
+    }
+  }
+
+  bool _sameIds(Set<int>? a, Set<int>? b) => a == null
+      ? b == null
+      : b != null && a.length == b.length && a.containsAll(b);
+
   Future<void> _load() async {
     final appState = context.read<AppState>();
     setState(() {
@@ -64,41 +86,18 @@ class _MapScreenState extends State<MapScreen> {
       _error = null;
     });
 
-    List<Map<String, dynamic>> incidents = [];
     try {
-      final api = widget.api ?? ModuleApi(baseUrl: appState.backendUrl);
-      try {
-        final data = await api.request('/sos');
-        incidents = (data as List? ?? []).whereType<Map>().map((item) {
-          final event = Map<String, dynamic>.from(item);
-          return {
-            ...event,
-            'lat': event['latitude'],
-            'lon': event['longitude'],
-            'title': '${event['category'] ?? 'SOS'} request',
-            'priority': ((event['urgency'] as num?)?.toDouble() ?? 3) * 20,
-          };
-        }).toList();
-      } finally {
-        if (widget.api == null) api.close();
-      }
-    } catch (_) {
-      // Offline map still works; markers just come from the last fetch.
-    }
-
-    try {
+      // Load and paint the offline basemap first. The incident API can be
+      // unreachable or slow in station demos, and must not blank the map.
       final data = await NepalMapData.load(rootBundle);
-      Position? device;
-      try {
-        device = await currentDevicePosition();
-      } catch (_) {
-        // The basemap remains useful when this device has no GPS fix.
+      if (data.provinces.isEmpty) {
+        throw StateError(
+            'The bundled Nepal boundary data contains no polygons.');
       }
       if (!mounted) return;
       setState(() {
         _mapData = data;
-        _incidents = incidents;
-        _device = device;
+        _incidents = [];
         _loading = false;
       });
     } catch (e) {
@@ -107,6 +106,49 @@ class _MapScreenState extends State<MapScreen> {
         _loading = false;
         _error = 'Map data unavailable: $e';
       });
+      return;
+    }
+
+    List<Map<String, dynamic>> incidents = [];
+    try {
+      final api = widget.api ?? ModuleApi(baseUrl: appState.backendUrl);
+      try {
+        final response = await api.request('/sos').timeout(
+              const Duration(seconds: 8),
+            );
+        incidents = (response as List? ?? [])
+            .whereType<Map>()
+            .map((item) {
+              final event = Map<String, dynamic>.from(item);
+              return {
+                ...event,
+                'lat': event['latitude'],
+                'lon': event['longitude'],
+                'title': '${event['category'] ?? 'SOS'} request',
+                'priority': ((event['urgency'] as num?)?.toDouble() ?? 3) * 20,
+              };
+            })
+            .where((event) =>
+                widget.incidentId == null ||
+                event['incident_id'] == widget.incidentId)
+            .where((event) =>
+                widget.incidentIds == null ||
+                widget.incidentIds!.contains(event['incident_id']))
+            .toList();
+      } finally {
+        if (widget.api == null) api.close();
+      }
+    } catch (_) {
+      // Offline map still works; markers just come from the last fetch.
+    }
+
+    if (mounted) setState(() => _incidents = incidents);
+    // GPS is optional. Add a device marker only after the basemap is visible.
+    try {
+      final device = await currentDevicePosition();
+      if (mounted) setState(() => _device = device);
+    } catch (_) {
+      // The basemap remains useful when this device has no GPS fix.
     }
   }
 
@@ -122,56 +164,63 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(appState.t(context, 'Nepal map', 'नेपाल नक्सा')),
-        actions: [
-          IconButton(
-            tooltip: appState.t(context, 'Find my location', 'मेरो स्थान'),
-            icon: const Icon(Icons.my_location),
-            onPressed: _refreshLocation,
-          ),
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _load),
-        ],
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : LayoutBuilder(
-              builder: (context, constraints) {
-                final size = Size(constraints.maxWidth, constraints.maxHeight);
-                final projection = _Projection.fit(size);
-                return Stack(
-                  children: [
-                    Positioned.fill(
-                      child: CustomPaint(
-                        painter: _NepalBasemapPainter(
-                          provinces: _mapData?.provinces ?? const [],
-                          headquarters: _mapData?.headquarters ?? const [],
-                        ),
+    final mapHeader = AppBar(
+      title: Text(appState.t(context, 'Nepal map', 'नेपाल नक्सा')),
+      actions: [
+        IconButton(
+          tooltip: appState.t(context, 'Find my location', 'मेरो स्थान'),
+          icon: const Icon(Icons.my_location),
+          onPressed: _refreshLocation,
+        ),
+        IconButton(icon: const Icon(Icons.refresh), onPressed: _load),
+      ],
+    );
+    final mapBody = _loading
+        ? const Center(child: CircularProgressIndicator())
+        : LayoutBuilder(
+            builder: (context, constraints) {
+              final size = Size(constraints.maxWidth, constraints.maxHeight);
+              final projection = _Projection.fit(size);
+              return Stack(
+                children: [
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: _NepalBasemapPainter(
+                        provinces: _mapData?.provinces ?? const [],
+                        headquarters: _mapData?.headquarters ?? const [],
                       ),
                     ),
-                    if (_device != null)
-                      _deviceMarker(projection, size, _device!, appState),
-                    for (final incident in _incidents)
-                      _incidentMarker(projection, size, incident, appState),
+                  ),
+                  if (_device != null)
+                    _deviceMarker(projection, size, _device!, appState),
+                  for (final incident in _incidents)
+                    _incidentMarker(projection, size, incident, appState),
+                  Positioned(
+                    left: 12,
+                    right: 12,
+                    bottom: 12,
+                    child: _legend(appState),
+                  ),
+                  if (_error != null)
                     Positioned(
+                      top: 12,
                       left: 12,
                       right: 12,
-                      bottom: 12,
-                      child: _legend(appState),
+                      child: _banner(_error!),
                     ),
-                    if (_error != null)
-                      Positioned(
-                        top: 12,
-                        left: 12,
-                        right: 12,
-                        child: _banner(_error!),
-                      ),
-                  ],
-                );
-              },
-            ),
-    );
+                ],
+              );
+            },
+          );
+    if (widget.embedded) {
+      return Column(
+        children: [
+          SizedBox(height: kToolbarHeight, child: mapHeader),
+          Expanded(child: mapBody),
+        ],
+      );
+    }
+    return Scaffold(appBar: mapHeader, body: mapBody);
   }
 
   Widget _deviceMarker(
@@ -183,9 +232,8 @@ class _MapScreenState extends State<MapScreen> {
     final accuracy = device.accuracy;
     final accuracyPx =
         math.min(120.0, math.max(14.0, accuracy / 111320.0 * projection.scale));
-    final color = accuracy <= 100
-        ? const Color(0xFF4EA1FF)
-        : const Color(0xFFF57C00);
+    final color =
+        accuracy <= 100 ? const Color(0xFF4EA1FF) : const Color(0xFFF57C00);
 
     final center = projection.toScreen(device.latitude, device.longitude);
     return Positioned(
@@ -260,7 +308,8 @@ class _MapScreenState extends State<MapScreen> {
                 child: Container(
                   width: 8,
                   height: 8,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+                  decoration:
+                      BoxDecoration(shape: BoxShape.circle, color: color),
                 ),
               ),
             ),
@@ -289,12 +338,14 @@ class _MapScreenState extends State<MapScreen> {
           children: [
             Row(
               children: [
-                Icon(Icons.place, color: AppState.severityColor(_severityOf(incident))),
+                Icon(Icons.place,
+                    color: AppState.severityColor(_severityOf(incident))),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     _labelOf(incident),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -393,7 +444,8 @@ class _MapScreenState extends State<MapScreen> {
           decoration: BoxDecoration(shape: BoxShape.circle, color: color),
         ),
         const SizedBox(width: 5),
-        Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF9AA9B3))),
+        Text(label,
+            style: const TextStyle(fontSize: 11, color: Color(0xFF9AA9B3))),
       ],
     );
   }
@@ -405,7 +457,8 @@ class _MapScreenState extends State<MapScreen> {
         color: const Color(0xE6D32F2F),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(message, style: const TextStyle(color: Colors.white, fontSize: 12)),
+      child: Text(message,
+          style: const TextStyle(color: Colors.white, fontSize: 12)),
     );
   }
 }
@@ -457,7 +510,8 @@ class _Projection {
     );
   }
 
-  Offset toScreen(double lat, double lon) => origin +
+  Offset toScreen(double lat, double lon) =>
+      origin +
       Offset((lon - _west) * _cosMidLat * scale, (_north - lat) * scale);
 }
 
@@ -473,15 +527,16 @@ class _NepalBasemapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final projection = _Projection.fit(size);
-    canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFF0D1216));
+    canvas.drawRect(
+        Offset.zero & size, Paint()..color = const Color(0xFF101820));
 
     final fill = Paint()
-      ..color = const Color(0xFF16212A)
+      ..color = const Color(0xFF263B48)
       ..style = PaintingStyle.fill;
     final border = Paint()
-      ..color = const Color(0xFF2C3A43)
+      ..color = const Color(0xFF6A8794)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
+      ..strokeWidth = 1.35;
 
     for (final polygon in provinces) {
       final path = Path()..fillType = PathFillType.evenOdd;
@@ -500,7 +555,7 @@ class _NepalBasemapPainter extends CustomPainter {
     }
 
     // District headquarters: small dots, labels only for major cities.
-    final hqPaint = Paint()..color = const Color(0xFF54646F);
+    final hqPaint = Paint()..color = const Color(0xFF9BB2BE);
     for (final hq in headquarters) {
       final geometry = hq['geometry'];
       if (geometry is! Map) continue;
@@ -521,9 +576,11 @@ class _NepalBasemapPainter extends CustomPainter {
     }
   }
 
-  void _drawLabel(Canvas canvas, Offset at, String text, Color color, double fontSize) {
+  void _drawLabel(
+      Canvas canvas, Offset at, String text, Color color, double fontSize) {
     final painter = TextPainter(
-      text: TextSpan(text: text, style: TextStyle(color: color, fontSize: fontSize)),
+      text: TextSpan(
+          text: text, style: TextStyle(color: color, fontSize: fontSize)),
       textDirection: TextDirection.ltr,
     )..layout();
     painter.paint(canvas, at);
@@ -531,5 +588,6 @@ class _NepalBasemapPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _NepalBasemapPainter oldDelegate) =>
-      oldDelegate.provinces != provinces || oldDelegate.headquarters != headquarters;
+      oldDelegate.provinces != provinces ||
+      oldDelegate.headquarters != headquarters;
 }

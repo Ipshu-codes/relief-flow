@@ -97,6 +97,7 @@ class HelpOffer(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    need_id: Mapped[int | None] = mapped_column(ForeignKey('needs.id'), nullable=True, index=True)
     offered_by: Mapped[int] = mapped_column(ForeignKey('users.id'))
     category: Mapped[str] = mapped_column(String(30))
     description: Mapped[str] = mapped_column(Text)

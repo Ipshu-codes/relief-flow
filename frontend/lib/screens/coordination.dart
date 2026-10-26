@@ -4,27 +4,57 @@ import 'package:flutter/material.dart';
 import '../module_api.dart';
 import 'map.dart';
 
+class CoordinationSession extends ChangeNotifier {
+  final ModuleApi api;
+  final bool ownsApi;
+  Map<String, dynamic>? user;
+
+  CoordinationSession({ModuleApi? api, this.ownsApi = true})
+      : api = api ?? ModuleApi();
+
+  void setUser(Map<String, dynamic>? value) {
+    user = value;
+    notifyListeners();
+  }
+
+  void signOut() {
+    api.token = null;
+    setUser(null);
+  }
+
+  @override
+  void dispose() {
+    if (ownsApi) api.close();
+    super.dispose();
+  }
+}
+
 class CoordinationScreen extends StatefulWidget {
   final ModuleApi? api;
   final bool embedded;
   final String section;
   final bool stationMode;
+  final CoordinationSession? session;
   const CoordinationScreen(
       {super.key,
       this.api,
       this.embedded = false,
       this.section = 'all',
-      this.stationMode = false});
+      this.stationMode = false,
+      this.session});
 
   @override
   State<CoordinationScreen> createState() => _CoordinationScreenState();
 }
 
 class _CoordinationScreenState extends State<CoordinationScreen> {
-  late final ModuleApi _api;
+  late final CoordinationSession _session;
+  bool _ownsSession = false;
+  int? _observedUserId;
+  ModuleApi get _api => _session.api;
+  Map<String, dynamic>? get _user => _session.user;
   final _email = TextEditingController();
   final _password = TextEditingController();
-  Map<String, dynamic>? _user;
   Map<String, dynamic> _workspace = {};
   List<Map<String, dynamic>> _needs = [], _volunteers = [], _assignments = [];
   List<Map<String, dynamic>> _stock = [],
@@ -55,16 +85,30 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
   @override
   void initState() {
     super.initState();
-    _api = widget.api ?? ModuleApi();
+    _session = widget.session ??
+        CoordinationSession(api: widget.api, ownsApi: widget.api == null);
+    _ownsSession = widget.session == null;
+    _session.addListener(_sessionChanged);
     _refreshTimer = Timer.periodic(const Duration(seconds: 15), (_) {
       if (mounted && _user != null && !_busy) _run(_refresh);
     });
   }
 
+  void _sessionChanged() {
+    final userId = _user?['id'] as int?;
+    final shouldLoad = _observedUserId == null && userId != null;
+    _observedUserId = userId;
+    if (mounted) {
+      setState(() {});
+      if (shouldLoad) _run(_refresh);
+    }
+  }
+
   @override
   void dispose() {
     _refreshTimer?.cancel();
-    _api.close();
+    _session.removeListener(_sessionChanged);
+    if (_ownsSession) _session.dispose();
     _email.dispose();
     _password.dispose();
     _name.dispose();
@@ -96,7 +140,7 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
         }
         final user = await _api.login(_email.text, _password.text);
         if (!mounted) return;
-        setState(() => _user = user);
+        _session.setUser(user);
         _password.clear();
         await _refresh();
       });
@@ -107,11 +151,10 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
     final profile =
         Map<String, dynamic>.from(await _api.request('/auth/me/profile'));
     final incidents = _rows(workspace['incidents']);
-    final selected = incidents.any((row) => row['id'] == _incident)
-        ? _incident
-        : incidents.isEmpty
-            ? null
-            : incidents.first['id'] as int;
+    // Start with the full response picture. Coordinators can narrow it to one
+    // incident from the selector when they need to work a specific event.
+    final selected =
+        incidents.any((row) => row['id'] == _incident) ? _incident : null;
     final query = selected == null ? '' : '?incident_id=$selected';
     final needs = await _api.request('/needs$query');
     final assignments = await _api.request('/assignments$query');
@@ -149,7 +192,10 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
       _flags = _rows(flags);
       _proposals = _rows(proposals['items']);
       _sosEvents = _rows(sosEvents);
-      _offers = _rows(offers);
+      _offers = _rows(offers)
+          .where(
+              (offer) => selected == null || offer['incident_id'] == selected)
+          .toList();
       _notifications = _rows(notifications);
     });
   }
@@ -568,7 +614,7 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
         }
         await _api.request('/volunteers', method: 'POST', body: values);
         final user = await _api.request('/auth/me');
-        if (mounted) setState(() => _user = Map<String, dynamic>.from(user));
+        if (mounted) _session.setUser(Map<String, dynamic>.from(user));
         await _refresh();
       });
       final own = _volunteers
@@ -769,8 +815,35 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
               ]),
       ]);
 
-  Future<void> _offerHelp() async {
+  Future<void> _offerHelp({int? targetNeedId}) async {
+    final openNeeds = _needs
+        .where((need) => !['fulfilled', 'closed'].contains(need['status']))
+        .map((need) {
+      final incident = _rows(_workspace['incidents'])
+          .where((row) => row['id'] == need['incident_id'])
+          .firstOrNull;
+      return {
+        ...need,
+        'name':
+            '#${need['id']} · ${_label(need['category'])} · ${incident?['incident_type'] ?? 'Incident'} · ${incident?['name'] ?? 'Area not recorded'} · ${_location(need['location_id'])}',
+      };
+    }).toList();
+    if (openNeeds.isEmpty) {
+      setState(() => _error =
+          'There are no open needs to target. Choose another incident or wait for a request to be reported.');
+      return;
+    }
     final values = await _form('Offer help nearby', [
+      _Field('need_id', 'Choose a request to help',
+          required: true,
+          initial: targetNeedId,
+          options: openNeeds
+              .map((need) => {
+                    'id': need['id'],
+                    'name':
+                        '${need['name']} · ${need['description']} · Materials: ${(need['required_equipment'] as List? ?? []).isEmpty ? 'not specified' : (need['required_equipment'] as List).join(', ')}',
+                  })
+              .toList()),
       const _Field('category', 'What can you provide?', options: [
         {'id': 'water', 'name': 'Water'},
         {'id': 'food', 'name': 'Food'},
@@ -780,7 +853,7 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
         {'id': 'skill', 'name': 'Skilled help'},
         {'id': 'other', 'name': 'Other'},
       ]),
-      const _Field('description', 'Details'),
+      const _Field('description', 'Extra details or materials included'),
       const _Field('quantity', 'Quantity', number: true),
       const _Field('unit', 'Unit (litres, meals, hours...)'),
       const _Field('location_text', 'Where is it available?'),
@@ -796,14 +869,28 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
             child: _button(
                 'Offer help', Icons.volunteer_activism_outlined, _offerHelp)),
         const Text(
-            'Offer water, supplies, transport, or your skills. This is a community offer, not an automatic deployment.',
+            'Choose a reported request and offer the materials, transport, or skills it needs. A coordinator reviews offers before deployment.',
             style: TextStyle(color: Color(0xFFADB9BF), height: 1.4)),
         const SizedBox(height: 12),
+        const Text('Open requests you can help with',
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+        for (final need in _needs
+            .where((row) => !['fulfilled', 'closed'].contains(row['status'])))
+          _entry(
+              '#${need['id']} · ${_label(need['category'])} · ${_location(need['location_id'])}',
+              '${need['description']}\n${need['quantity_fulfilled']} / ${need['quantity_requested']} ${need['unit']} fulfilled · Materials: ${(need['required_equipment'] as List? ?? []).isEmpty ? 'not specified' : (need['required_equipment'] as List).join(', ')} · Status: ${_label(need['status'])}',
+              children: [
+                _button('Offer for this request', Icons.volunteer_activism,
+                    () => _offerHelp(targetNeedId: need['id'] as int)),
+              ]),
+        const SizedBox(height: 12),
+        const Text('Community offers',
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
         if (_offers.isEmpty) const Text('No open community offers nearby.'),
         for (final offer in _offers)
           _entry(
               '${_label(offer['category'])} · ${offer['quantity']} ${offer['unit']}',
-              '${offer['description']}\nAvailable at: ${offer['location_text']}\nOffered by ${offer['offered_by_name']}',
+              '${offer['description']}\nAvailable at: ${offer['location_text']}\nOffered by ${offer['offered_by_name']}\n${offer['need_id'] == null ? 'General incident offer' : 'For Need #${offer['need_id']}'}',
               children: [
                 if (offer['offered_by'] != _user?['id'])
                   _button('Respond', Icons.reply_outlined,
@@ -827,7 +914,7 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
     await _run(() async {
       await _api.request('/organizations', method: 'POST', body: values);
       final user = await _api.request('/auth/me');
-      if (mounted) setState(() => _user = Map<String, dynamic>.from(user));
+      if (mounted) _session.setUser(Map<String, dynamic>.from(user));
       await _refresh();
     });
   }
@@ -1643,7 +1730,7 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
               const Icon(Icons.hub_outlined,
                   size: 48, color: Color(0xFF4CAF7D)),
               const SizedBox(height: 20),
-              const Text('Service Station',
+              const Text('Rahat',
                   style: TextStyle(fontSize: 26, fontWeight: FontWeight.w600)),
               const SizedBox(height: 24),
               if (_register) ...[
@@ -1707,7 +1794,7 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
           appBar: widget.embedded
               ? null
               : AppBar(
-                  title: const Text('Service Station'),
+                  title: const Text('Rahat'),
                   actions: [
                     if (_user != null) ...[
                       IconButton(
@@ -1718,11 +1805,10 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
                           tooltip: 'Sign out',
                           onPressed: _busy
                               ? null
-                              : () => setState(() {
-                                    _api.token = null;
-                                    _user = null;
-                                    _workspace = {};
-                                  }),
+                              : () {
+                                  setState(() => _workspace = {});
+                                  _session.signOut();
+                                },
                           icon: const Icon(Icons.logout)),
                     ],
                   ],
@@ -1782,28 +1868,32 @@ class _CoordinationScreenState extends State<CoordinationScreen> {
                               tooltip: 'Sign out',
                               onPressed: _busy
                                   ? null
-                                  : () => setState(() {
-                                        _api.token = null;
-                                        _user = null;
-                                        _workspace = {};
-                                      }),
+                                  : () {
+                                      setState(() => _workspace = {});
+                                      _session.signOut();
+                                    },
                               icon: const Icon(Icons.logout)),
                         ],
                         if (incidents.isNotEmpty)
                           SizedBox(
                               width: 260,
-                              child: DropdownButtonFormField<int>(
+                              child: DropdownButtonFormField<int?>(
                                 key: ValueKey(_incident),
                                 initialValue: _incident,
                                 isExpanded: true,
                                 decoration: const InputDecoration(
                                     labelText: 'Incident'),
-                                items: incidents
-                                    .map((row) => DropdownMenuItem(
-                                        value: row['id'] as int,
-                                        child: Text('${row['name']}',
-                                            overflow: TextOverflow.ellipsis)))
-                                    .toList(),
+                                items: [
+                                  const DropdownMenuItem<int?>(
+                                      value: null,
+                                      child: Text('All incidents')),
+                                  ...incidents.map((row) => DropdownMenuItem<
+                                          int?>(
+                                      value: row['id'] as int,
+                                      child: Text(
+                                          '${_label(row['incident_type'])} · ${row['name']}',
+                                          overflow: TextOverflow.ellipsis))),
+                                ],
                                 onChanged: _busy
                                     ? null
                                     : (value) {

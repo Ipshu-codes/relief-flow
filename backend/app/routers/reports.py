@@ -279,6 +279,7 @@ def _need_response(need: Need, report: RawReport | None = None) -> dict:
         'category': need.category,
         'description': need.description,
         'required_skills': need.required_skills,
+        'required_equipment': need.required_equipment,
         'quantity_requested': need.quantity_requested,
         'quantity_fulfilled': need.quantity_fulfilled,
         'unit': need.unit,

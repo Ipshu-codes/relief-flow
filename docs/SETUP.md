@@ -107,9 +107,10 @@ flutter run -d web-server --web-hostname 127.0.0.1 --web-port 52396
 Open http://127.0.0.1:52396. The station and public app both use the same
 backend on port `8000`; the station is not a second server-side datastore.
 
-For local demo data, sign in as `coordinator@demo.rahat.org` or
-`volunteer@demo.rahat.org`, with password `RahatDemo2026!`. These are public
-demonstration credentials, never deployment credentials.
+For the command station demo login, use `admin@demo.rahat.org` with password
+`Rahat123!`. The demo also creates `coordinator@demo.rahat.org` and
+`volunteer@demo.rahat.org`, both using password `RahatDemo2026!`. These are
+public demonstration credentials, never deployment credentials.
 
 ## 6. Run Tests and Evaluation
 

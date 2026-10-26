@@ -113,7 +113,7 @@ class ModuleApi {
           'The request timed out. Retry to check the same operation.');
     } on http.ClientException {
       throw const ModuleApiException(
-          'Cannot connect to Rahat right now. Check your internet connection and try again.');
+          'Could not reach the Rahat server. Check that the backend is running and try again.');
     }
   }
 

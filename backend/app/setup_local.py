@@ -15,7 +15,17 @@ def seed_demo(db):
 
     seed_skills(db)
     seed_resources(db)
+    admin = db.scalar(select(User).where(User.email == 'admin@demo.rahat.org'))
+    if admin is None:
+        admin = User(
+            email='admin@demo.rahat.org',
+            full_name='Demo Administrator',
+            role='admin',
+            password_hash=hash_password('Rahat123!'),
+        )
+        db.add(admin)
     if db.scalar(select(User).where(User.email == 'coordinator@demo.rahat.org')):
+        db.commit()
         return
     coordinator = User(email='coordinator@demo.rahat.org', full_name='Demo Coordinator', role='coordinator', password_hash=hash_password('RahatDemo2026!'))
     volunteer = User(email='volunteer@demo.rahat.org', full_name='Demo Solar Technician', role='volunteer', password_hash=hash_password('RahatDemo2026!'))
@@ -67,6 +77,7 @@ def main():
             seed_demo(db)
         print('Synthetic demo ready. Accounts: coordinator@demo.rahat.org / volunteer@demo.rahat.org')
         print('Public demo password: RahatDemo2026! Do not expose this database publicly.')
+        print('Command station admin: admin@demo.rahat.org / Rahat123!')
     else:
         from .seed import seed_resources, seed_skills
 

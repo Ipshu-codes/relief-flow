@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from ..db import get_db
 from ..ledger import append_audit_log
-from ..models import HelpOffer, Notification, User
+from ..models import HelpOffer, Need, Notification, User
 from ..schemas import HelpOfferCreate
 from ..security import get_current_user
 
@@ -15,8 +15,11 @@ MANAGER_ROLES = {'admin', 'coordinator'}
 def offer_response(db: Session, offer: HelpOffer) -> dict:
     owner = db.get(User, offer.offered_by)
     claimant = db.get(User, offer.claimed_by) if offer.claimed_by else None
+    target = db.get(Need, offer.need_id) if offer.need_id else None
     return {
         'id': offer.id,
+        'need_id': offer.need_id,
+        'incident_id': target.incident_id if target else None,
         'offered_by': offer.offered_by,
         'offered_by_name': owner.full_name if owner else 'Community member',
         'category': offer.category,
@@ -52,6 +55,12 @@ def create_offer(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
+    if data.need_id is not None:
+        need = db.get(Need, data.need_id)
+        if need is None:
+            raise HTTPException(status_code=404, detail='Requested need not found')
+        if need.status in {'fulfilled', 'closed'}:
+            raise HTTPException(status_code=409, detail='This need is no longer open for offers')
     offer = HelpOffer(offered_by=user.id, **data.model_dump())
     db.add(offer)
     db.flush()
@@ -64,7 +73,7 @@ def create_offer(
             kind='help_offer',
             title='New community help offer',
             message=f'{user.full_name} can provide {data.quantity:g} {data.unit} of {data.category}.',
-            payload={'offer_id': offer.id},
+            payload={'offer_id': offer.id, 'need_id': offer.need_id},
         ))
     append_audit_log(
         db, actor_id=user.id, action='help_offer_created',

@@ -10,7 +10,10 @@ import '../mesh_service.dart';
 
 class HomeScreen extends StatefulWidget {
   final ModuleApi? moduleApi;
-  const HomeScreen({super.key, this.moduleApi});
+  final CoordinationSession? session;
+  final bool showNavigation;
+  const HomeScreen(
+      {super.key, this.moduleApi, this.session, this.showNavigation = true});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -18,6 +21,25 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  late final CoordinationSession _coordinationSession;
+  late final bool _ownsCoordinationSession;
+
+  @override
+  void initState() {
+    super.initState();
+    _ownsCoordinationSession = widget.session == null;
+    _coordinationSession = widget.session ??
+        CoordinationSession(
+          api: widget.moduleApi,
+          ownsApi: widget.moduleApi == null,
+        );
+  }
+
+  @override
+  void dispose() {
+    if (_ownsCoordinationSession) _coordinationSession.dispose();
+    super.dispose();
+  }
 
   void _select(int index) => setState(() => _selectedIndex = index);
 
@@ -77,30 +99,34 @@ class _HomeScreenState extends State<HomeScreen> {
           child: IndexedStack(index: pageIndex, children: [
         _OpsView(onNavigate: _select),
         CoordinationScreen(
-            api: widget.moduleApi,
+            session: _coordinationSession,
             embedded: true,
             section: 'volunteer'),
         CoordinationScreen(
-            api: widget.moduleApi,
-            embedded: true,
-            section: 'response'),
+            session: _coordinationSession, embedded: true, section: 'response'),
         const MeshScreen(embedded: true),
         const SettingsScreen(embedded: true),
       ])),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
-          NavigationDestination(
-              icon: Icon(Icons.volunteer_activism_outlined),
-              label: 'Volunteer'),
-          NavigationDestination(icon: Icon(Icons.assignment_outlined), label: 'Request and Response'),
-          NavigationDestination(icon: Icon(Icons.wifi_outlined), label: 'Mesh'),
-          NavigationDestination(
-              icon: Icon(Icons.settings_outlined), label: 'Settings'),
-        ],
-      ),
+      bottomNavigationBar: widget.showNavigation
+          ? NavigationBar(
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+              destinations: const [
+                NavigationDestination(
+                    icon: Icon(Icons.home_outlined), label: 'Home'),
+                NavigationDestination(
+                    icon: Icon(Icons.volunteer_activism_outlined),
+                    label: 'Volunteer'),
+                NavigationDestination(
+                    icon: Icon(Icons.assignment_outlined),
+                    label: 'Request and Response'),
+                NavigationDestination(
+                    icon: Icon(Icons.wifi_outlined), label: 'Mesh'),
+                NavigationDestination(
+                    icon: Icon(Icons.settings_outlined), label: 'Settings'),
+              ],
+            )
+          : null,
     );
   }
 }
@@ -270,7 +296,7 @@ class _OpsViewState extends State<_OpsView> {
               }
               if (!snap.hasData || snap.data!.isEmpty) {
                 return const Text(
-                    'Backend reachable. Sign in under Service Station to view incidents and coordination data.',
+                    'Backend reachable. Sign in to continue and view incidents and coordination data.',
                     style: TextStyle(color: Colors.grey));
               }
 

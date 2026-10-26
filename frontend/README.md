@@ -21,7 +21,7 @@ The Service Station is intentionally a separate frontend in
 ```powershell
 Set-Location 'D:\Rahat final\frontend'
 flutter pub get
-flutter run -d chrome --web-port 52394
+flutter run -d web-server --web-hostname 127.0.0.1 --web-port 52394
 ```
 
 The backend should be running at `http://127.0.0.1:8000`. Users do not enter

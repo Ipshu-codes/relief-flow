@@ -75,7 +75,12 @@ def workspace(db: Session = Depends(get_db), user: User = Depends(get_current_us
         organizations = organizations.where(Organization.id == user.organization_id)
     return {
         'incidents': [
-            {'id': row.id, 'name': row.affected_area or row.incident_type, 'status': row.status}
+            {
+                'id': row.id,
+                'name': row.affected_area or row.incident_type,
+                'incident_type': row.incident_type,
+                'status': row.status,
+            }
             for row in db.scalars(select(Incident).order_by(Incident.id.desc()).limit(100))
         ],
         'locations': [

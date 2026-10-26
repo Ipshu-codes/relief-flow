@@ -363,7 +363,13 @@ def require_coordinator(user: User) -> None:
 
 @router.get('/sos')
 def list_sos(
-    status: str | None = Query(default=None, pattern='^(new|acknowledged|dispatched|resolved|false_alarm)$'),
+    status: str | None = Query(
+        default=None,
+        pattern=(
+            '^(new|received|acknowledged|verified|awaiting_dispatch|assigned|'
+            'responding|on_scene|dispatched|resolved|cancelled|false_alarm)$'
+        ),
+    ),
     since: datetime | None = None,
     incident_id: int | None = None,
     latitude: float | None = Query(default=None, ge=-90, le=90),

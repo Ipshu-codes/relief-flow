@@ -108,6 +108,7 @@ class UserProfilePatch(BaseModel):
 
 
 class HelpOfferCreate(BaseModel):
+    need_id: int | None = None
     category: str = Field(pattern='^(water|food|medicine|shelter|transport|skill|other)$')
     description: str = Field(min_length=3, max_length=1000)
     quantity: float = Field(gt=0, le=1000000)

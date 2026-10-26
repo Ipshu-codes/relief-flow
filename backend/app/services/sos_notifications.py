@@ -107,6 +107,12 @@ async def notify_sos(
         ).all()
         recipients.update(user.id for user in available)
 
+    reporter = db.get(User, event.reporter_user_id) if event.reporter_user_id else None
+    if reporter is not None:
+        # A reporter can also have a manager or volunteer role. They should
+        # not receive the same alert that their own request generated.
+        recipients.discard(reporter.id)
+
     for user_id in recipients:
         db.add(_notification(
             user_id,
@@ -114,8 +120,6 @@ async def notify_sos(
             message,
             event,
         ))
-
-    reporter = db.get(User, event.reporter_user_id) if event.reporter_user_id else None
     sms_targets: set[str] = set()
     for user in [reporter] if reporter is not None else []:
         for contact in user.emergency_contacts or []:
@@ -133,7 +137,7 @@ async def notify_sos(
                 ),
                 None,
             )
-            if registered is not None:
+            if registered is not None and registered.id != reporter.id:
                 db.add(_notification(
                     registered.id,
                     'Emergency contact alert',
@@ -141,7 +145,9 @@ async def notify_sos(
                     event,
                     kind='emergency_contact_alert',
                 ))
-            sms_targets.add(phone)
+                sms_targets.add(phone)
+            elif registered is None:
+                sms_targets.add(phone)
 
     # Never fail the SOS transaction because a third-party SMS provider is down.
     for phone in sms_targets:

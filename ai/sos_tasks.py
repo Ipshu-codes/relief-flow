@@ -22,7 +22,32 @@ CATEGORY_NEED_MAP = {
     'RESCUE': 'rescue',
     'OTHER': 'other',
 }
+NEED_KEYWORDS = {
+    'medical': ('medical', 'medicine', 'medication', 'doctor', 'nurse', 'injury', 'hospital', 'औषधि', 'चिकित्स'),
+    'rescue': ('rescue', 'trapped', 'evacuat', 'boat', 'stuck', 'फसे', 'उद्धार'),
+    'water': ('water', 'drink', 'पानी', 'खानेपानी'),
+    'food': ('food', 'meal', 'rice', 'खाना', 'चामल'),
+    'shelter': ('shelter', 'blanket', 'tent', 'आश्रय', 'कम्बल'),
+    'technical_repair': ('repair', 'electric', 'power', 'technical', 'मर्मत'),
+}
 logger = logging.getLogger(__name__)
+
+
+def _need_category(text: str, default: str) -> str:
+    normalized = text.casefold()
+    for category, keywords in NEED_KEYWORDS.items():
+        if any(keyword in normalized for keyword in keywords):
+            return category
+    return default
+
+
+def _area_name(event: SOSEvent, location_text: str | None) -> str:
+    if location_text:
+        return location_text[:160]
+    address = event.address or {}
+    parts = [address.get(key) for key in ('district', 'city', 'ward', 'road', 'landmark')]
+    label = ', '.join(str(part) for part in parts if part)
+    return label[:160] if label else f'SOS #{event.id} location'
 
 
 def rule_interpret_sos(message: str, selected_category: str, allowed_skills: list[str]) -> dict:
@@ -38,13 +63,20 @@ def rule_interpret_sos(message: str, selected_category: str, allowed_skills: lis
         elif any(word in normalized for word in ('rescue', 'water rising', 'pani badhyo', 'bachau')):
             category = 'RESCUE'
     urgency = 5 if any(word in normalized for word in ('trapped', 'stuck', 'fasyo', 'water rising', 'pani badhyo')) else 3
+    needs = [
+        kind
+        for kind, keywords in NEED_KEYWORDS.items()
+        if any(keyword in normalized for keyword in keywords)
+    ]
+    if not needs:
+        needs = [CATEGORY_NEED_MAP[category]]
     return {
         'category': category,
         'urgency': urgency,
         'required_skills': rule_based_skill_map(message, allowed_skills),
         'location_text': None,
         'people_affected': None,
-        'needs': [],
+        'needs': needs,
         'vulnerable_groups': [],
         'missing_information': [],
     }
@@ -109,14 +141,22 @@ async def interpret_sos_event(sos_id: int, *, link_location: bool = False) -> No
             linked_need = None
             incident = db.get(Incident, event.incident_id) if event.incident_id else None
             if incident is None:
-                active_incidents = db.scalars(
+                incident = db.scalar(
                     select(Incident)
-                    .where(Incident.status.in_(('active', 'received')))
+                    .where(Incident.status.not_in(('resolved', 'cancelled')))
                     .order_by(Incident.started_at.desc())
-                ).all()
-                if len(active_incidents) == 1:
-                    incident = active_incidents[0]
-                    event.incident_id = incident.id
+                    .limit(1)
+                )
+                if incident is None:
+                    incident = Incident(
+                        incident_type=event.category.casefold(),
+                        started_at=datetime.now(timezone.utc),
+                        status='received',
+                        affected_area=_area_name(event, result.location_text),
+                    )
+                    db.add(incident)
+                    db.flush()
+                event.incident_id = incident.id
 
             location = None
             if event.has_location:
@@ -133,47 +173,69 @@ async def interpret_sos_event(sos_id: int, *, link_location: bool = False) -> No
                 nearby = [(distance, candidate) for distance, candidate in nearby if distance <= 2.0]
                 if nearby:
                     location = min(nearby, key=lambda pair: pair[0])[1]
+                else:
+                    location = Location(
+                        name=_area_name(event, result.location_text),
+                        location_type='settlement',
+                        latitude=event.latitude,
+                        longitude=event.longitude,
+                    )
+                    db.add(location)
+                    db.flush()
+            else:
+                location = Location(
+                    name=_area_name(event, result.location_text),
+                    location_type='settlement',
+                )
+                db.add(location)
+                db.flush()
 
             if incident is not None and location is not None:
-                need_category = CATEGORY_NEED_MAP[event.category]
-                linked_need = db.scalar(
-                    select(Need).where(
-                        Need.incident_id == incident.id,
-                        Need.location_id == location.id,
-                        Need.category == need_category,
-                        Need.status.in_(('open', 'partially_fulfilled', 'in_progress')),
-                    ).order_by(Need.id).limit(1)
-                )
-                if linked_need is None:
-                    linked_need = Need(
+                fallback = CATEGORY_NEED_MAP[event.category]
+                need_texts = [item.strip() for item in result.needs if item.strip()]
+                if not need_texts:
+                    need_texts = [event.message.strip() or _area_name(event, result.location_text)]
+                seen: set[tuple[str, str]] = set()
+                for need_text in need_texts:
+                    need_category = _need_category(need_text, fallback)
+                    key = (need_category, need_text.casefold())
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    need = Need(
                         incident_id=incident.id,
                         location_id=location.id,
                         category=need_category,
-                        description=event.message,
+                        description=f'{need_text}: {event.message}'[:4000],
                         required_skills=result.required_skills,
                         quantity_requested=1,
                         unit='request',
                         urgency=result.urgency,
+                        vulnerable_groups=result.vulnerable_groups,
+                        confidence='medium' if source == 'ai' else 'low',
                         source='sos',
                         verification_status='unverified',
                     )
-                    db.add(linked_need)
+                    db.add(need)
                     db.flush()
+                    if linked_need is None:
+                        linked_need = need
                     append_audit_log(
                         db,
                         actor_id=None,
                         action='need_created_from_sos',
                         entity='need',
-                        entity_id=linked_need.id,
+                        entity_id=need.id,
                         after={
                             'incident_id': incident.id,
                             'location_id': location.id,
-                            'category': linked_need.category,
-                            'verification_status': linked_need.verification_status,
+                            'category': need.category,
+                            'description': need.description,
+                            'verification_status': need.verification_status,
                             'source': 'sos',
                         },
                     )
-                event.linked_need_id = linked_need.id
+                event.linked_need_id = linked_need.id if linked_need else None
 
             append_audit_log(
                 db,

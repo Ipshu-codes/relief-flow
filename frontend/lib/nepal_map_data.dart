@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui' show Offset;
 
+import 'package:flutter/foundation.dart' show FlutterError;
 import 'package:flutter/services.dart' show AssetBundle;
 
 /// Offline Nepal basemap loaded from the GeoJSON assets bundled with the app.
@@ -20,8 +21,19 @@ class NepalMapData {
   static const String headquartersAsset = 'assets/nepal_hq.geojson';
 
   static Future<NepalMapData> load(AssetBundle bundle) async {
-    final states = json.decode(await bundle.loadString(statesAsset));
-    final headquarters = json.decode(await bundle.loadString(headquartersAsset));
+    // MapScreen is also embedded by the separate station Flutter app. Assets
+    // from a dependency are exposed below `packages/<package>/...`, whereas
+    // app-local copies use the unprefixed path. Support both launch contexts.
+    Future<String> loadAsset(String path) async {
+      try {
+        return await bundle.loadString(path);
+      } on FlutterError {
+        return bundle.loadString('packages/rahat_mobile/$path');
+      }
+    }
+
+    final states = json.decode(await loadAsset(statesAsset));
+    final headquarters = json.decode(await loadAsset(headquartersAsset));
     return NepalMapData.parse(states, headquarters);
   }
 

@@ -111,14 +111,21 @@ Set-Location 'D:\Rahat final\backend'
 ```
 
 Use `app.setup_local` after pulling schema changes. It applies migrations,
-including the SOS reporter-column repair, without deleting existing data.
+including the SOS reporter-column repair, without deleting existing data. For
+the demo login below, run the seed command against the same database used by
+the backend:
+
+```powershell
+Set-Location 'D:\Rahat final\backend'
+..\.venv\Scripts\python.exe -m app.setup_local --demo
+```
 
 ### Public/mobile app
 
 ```powershell
 Set-Location 'D:\Rahat final\frontend'
 flutter pub get
-flutter run -d chrome --web-port 52394
+flutter run -d web-server --web-hostname 127.0.0.1 --web-port 52394
 ```
 
 Use the Android build for native GPS/BLE testing:
@@ -135,15 +142,23 @@ flutter pub get
 flutter run -d web-server --web-hostname 127.0.0.1 --web-port 52396
 ```
 
-Open `http://localhost:52396`. `web-server` mode is preferred on this Windows
+Open `http://127.0.0.1:52396`. `web-server` mode is preferred on this Windows
 machine because Chrome debug attachment can time out. Keep its terminal open.
+
+For the demo station login, use `admin@demo.rahat.org` with password
+`Rahat123!`. These credentials are available only in a database seeded with
+`app.setup_local --demo`; running the command creates or refreshes the local
+demo accounts. The same local demo database also has
+`coordinator@demo.rahat.org` and `volunteer@demo.rahat.org`, both using
+`RahatDemo2026!`. These are demonstration credentials, not deployment
+credentials.
 
 Expected local addresses:
 
 ```text
 Backend:         http://127.0.0.1:8000
-Mobile frontend: http://localhost:52394
-Service Station: http://localhost:52396
+Mobile frontend: http://127.0.0.1:52394
+Service Station: http://127.0.0.1:52396
 ```
 
 If Flutter reports `10048`, a server is already listening on that port. Use

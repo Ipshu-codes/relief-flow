@@ -52,6 +52,8 @@ def assignment_response(assignment: Assignment) -> dict:
         'approved_by': assignment.approved_by,
         'outcome_notes': assignment.outcome_notes,
         'completion_criteria_met': assignment.completion_criteria_met,
+        'created_at': assignment.created_at.isoformat(),
+        'updated_at': assignment.updated_at.isoformat(),
     }
 
 
@@ -574,6 +576,7 @@ def update_assignment_status(
     if user.id != profile.user_id and user.role not in MANAGER_ROLES:
         raise HTTPException(status_code=403, detail='Only the assigned volunteer or a coordinator can update status')
     allowed = {
+        'approved': {'cancelled'},
         'accepted': {'en_route', 'cancelled'},
         'en_route': {'on_site', 'cancelled'},
         'on_site': {'cancelled'},
